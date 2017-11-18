@@ -7,3 +7,10 @@ Please note that this is a fairly quick hack, and I resurected code I wrote 15 y
 1. Parses the standard output from the training sesion to extract the moves
 1. Displays the moves on a graphical board
 1. When the game ends, writes it out to an SGF file named for the timestamp of when the game ended.
+
+#Running
+You can run the disributed jar file like this
+
+    java -jar LeelaWatcher-1.0.jar /home/gus/leelaz/leela-zero/autogtp/
+    
+The directory passed in must be the location of your leela-zero autogtp build.
