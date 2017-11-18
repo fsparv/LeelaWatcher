@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="tsb.gui.LeelaWatcher">
+  <grid id="27dc6" binding="top" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <splitpane id="3bc17" binding="splitPane">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <orientation value="0"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="9fbbf" class="tsb.gui.BoardView" binding="boardView" custom-create="true">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+          </component>
+          <scrollpane id="4dfd" binding="textScrollPane">
+            <constraints>
+              <splitpane position="right"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="3571b" class="javax.swing.JTextArea" binding="leelaOutputTextArea">
+                <constraints/>
+                <properties>
+                  <rows value="8"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </splitpane>
+    </children>
+  </grid>
+</form>
