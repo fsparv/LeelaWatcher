@@ -9,8 +9,10 @@ Please note that this is a fairly quick hack, and I resurected code I wrote 15 y
 1. When the game ends, writes it out to an SGF file named for the timestamp of when the game ended.
 
 # Running
-You can run the disributed jar file like this
+You can run the disributed jar file like this on Unix
 
     java -jar LeelaWatcher-1.0.jar /home/gus/leelaz/leela-zero/autogtp/
     
-The directory passed in must be the location of your leela-zero autogtp build.
+The directory passed in must be the location of your leela-zero autogtp build. For windows this shoudl work
+
+    D:\My Folders\Downloads\leela-zero-0.4-windows>java -jar LeelaWatcher-1.0.jar . autogtp.exe
