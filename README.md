@@ -13,6 +13,6 @@ You can run the disributed jar file like this on Unix
 
     java -jar LeelaWatcher-1.0.jar /home/gus/leelaz/leela-zero/autogtp/
     
-The directory passed in must be the location of your leela-zero autogtp build. For windows adding the name of the binary this should make it work
+The directory passed in must be the location of your leela-zero autogtp build. For windows adding the name of the binary like this should make it work.
 
     D:\My Folders\Downloads\leela-zero-0.4-windows>java -jar LeelaWatcher-1.0.jar . autogtp.exe
