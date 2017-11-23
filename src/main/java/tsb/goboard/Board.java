@@ -250,28 +250,34 @@ public class Board {
 
   public void doMove(int x, int y) {
     if (!gm.isGameOver() && ruleImp.isLegalMove(new PointOfPlay(x, y))) {
-
+      boolean wmove = isWhiteMove();
       PointOfPlay dir;
       positions.add(new Position(positions.get(currPos++),
           gm.doMove(x, y)));
       Position temp = positions.get(currPos);
       dir = new PointOfPlay(x, y + 1);
+
+      
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
       dir = new PointOfPlay(x + 1, y);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
       dir = new PointOfPlay(x, y - 1);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
       dir = new PointOfPlay(x - 1, y);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
