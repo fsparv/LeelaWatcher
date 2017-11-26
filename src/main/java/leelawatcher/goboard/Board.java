@@ -61,7 +61,7 @@ public class Board {
     positions = new ArrayList<>();              // default game.
     positions.add(new Position());
     currPos = 0;
-    ruleImp = new QuickRules(this);
+    ruleImp = new QuickRules();
     whiteHasCap = 0;
     blackHasCap = 0;
   }
@@ -245,7 +245,7 @@ public class Board {
    */
 
   public void doMove(int x, int y) {
-    if (!gm.isGameOver() && ruleImp.isLegalMove(new PointOfPlay(x, y))) {
+    if (!gm.isGameOver() && ruleImp.isLegalMove(new PointOfPlay(x, y), this)) {
 
       PointOfPlay dir;
       positions.add(new Position(positions.get(currPos++),
@@ -304,7 +304,7 @@ public class Board {
    * Find out how many liberties the group occupying a given point has.
    * <p>
    * This method invokes {@link
-   * AbstractRules#countLibs(PointOfPlay, int, MarkablePosition)
+   * AbstractRules#countLibs(PointOfPlay, int, MarkablePosition, Board)
    * AbstractRules.countLibs(PointOfPlay, int, MarkablePosition)} and
    * returns the result.
    *
@@ -314,7 +314,7 @@ public class Board {
    */
 
   public int countLiberties(PointOfPlay p) {
-    return ruleImp.countLibs(p, 0, null);
+    return ruleImp.countLibs(p, 0, null, this);
   }
 
   /**
@@ -404,6 +404,10 @@ public class Board {
   }
 
   public void pass() {
+
+  }
+
+  public void setUp() {
 
   }
 }

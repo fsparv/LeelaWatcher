@@ -18,87 +18,67 @@ package leelawatcher.scorer;
 
 import leelawatcher.goboard.*;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
 public class QuickRules extends AbstractRules {
-  public QuickRules(Board aBoard) {
-    super(aBoard);
+  public QuickRules() {
+    super();
   }
 
-  public boolean isLegalMove(PointOfPlay p) {
-    if (p.getX() == Move.PASS) {
-      return true;  // it is always legal to pass
-    }
-    return (isEmpty(p) && !isSelfCapture(p) && !isKo(p));
+  public boolean isLegalMove(PointOfPlay p, Board board) {
+    // it is always legal to pass
+    return p.getX() == Move.PASS || (isEmpty(p, board) && !isSelfCapture(p, board) && !isKo(p, board));
   }
 
-  public boolean isSelfCapture(PointOfPlay p) {
-    Move tmproot = new Move();
-    char color = Move.MOVE_BLACK;
-    boolean captureOpponent = false;  // at least until otherwise determined
-
-    PointOfPlay neighbor;
-    Move testMove;
-    Position tmpPos;
-    MarkablePosition testMPos;
-
+  public boolean isSelfCapture(PointOfPlay p, Board board) {
     // we must build a MarkablePosition that shows the board as it would be
     // if the stone were placed in order to test if this would result in self
     // capture (illegal in most rules of the game)
-
-    if (aBoard.isWhiteMove()) {
-      color = Move.MOVE_WHITE;
-    }
-    testMove = new Move(p.getX(), p.getY(), color, tmproot);
-    tmpPos = new Position(aBoard.getCurrPos(), testMove);
-    testMPos = new MarkablePosition(tmpPos);
+    Move tmpRoot = new Move();
+    char color = board.isWhiteMove() ? Move.MOVE_WHITE : Move.MOVE_BLACK;
+    Move testMove = new Move(p.getX(), p.getY(), color, tmpRoot);
+    Position tmpPos = new Position(board.getCurrPos(), testMove);
+    MarkablePosition testMPos = new MarkablePosition(tmpPos);
     //testMPos.dPrint();
 
     //System.out.println(captureOpponent);
-    neighbor = new PointOfPlay(p.getX(), p.getY() + 1);
-    captureOpponent = (captureOpponent
-        || ((aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0))
-        && (testMPos.colorAt(p)
-        != testMPos.colorAt(neighbor))));
+    PointOfPlay neighbor = new PointOfPlay(p.getX(), p.getY() + 1);
+    boolean captureOpponent = board.isOnBoard(neighbor)
+        && countLibs(neighbor, 0, testMPos, board) == 0
+        && testMPos.colorAt(p) != testMPos.colorAt(neighbor);
     testMPos.clearMarks();
     neighbor = new PointOfPlay(p.getX() + 1, p.getY());
     //System.out.println(captureOpponent);
     captureOpponent = (captureOpponent
-        || ((aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0))
-        && (testMPos.colorAt(p)
-        != testMPos.colorAt(neighbor))));
+        || ((board.isOnBoard(neighbor)
+            && (countLibs(neighbor, 0, testMPos, board) == 0))
+            && (testMPos.colorAt(p) != testMPos.colorAt(neighbor))));
     testMPos.clearMarks();
     neighbor = new PointOfPlay(p.getX(), p.getY() - 1);
     //System.out.println(captureOpponent);
     captureOpponent = (captureOpponent
-        || ((aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0))
-        && (testMPos.colorAt(p)
-        != testMPos.colorAt(neighbor))));
+        || ((board.isOnBoard(neighbor)
+            && (countLibs(neighbor, 0, testMPos, board) == 0))
+            && (testMPos.colorAt(p) != testMPos.colorAt(neighbor))));
     testMPos.clearMarks();
     neighbor = new PointOfPlay(p.getX() - 1, p.getY());
     //System.out.println(captureOpponent);
     captureOpponent = (captureOpponent
-        || ((aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0))
-        && (testMPos.colorAt(p)
-        != testMPos.colorAt(neighbor))));
+        || ((board.isOnBoard(neighbor)
+            && (countLibs(neighbor, 0, testMPos, board) == 0))
+            && (testMPos.colorAt(p) != testMPos.colorAt(neighbor))));
     testMPos.clearMarks();
     //testMPos.dPrint();
     //System.out.println(countLibs(p,0,testMPos));
     //testMPos.clearMarks();
     //System.out.println(captureOpponent);
-    return (countLibs(p, 0, testMPos) == 0) && !captureOpponent;
+    return (countLibs(p, 0, testMPos, board) == 0) && !captureOpponent;
   }
 
-  public boolean isKo(PointOfPlay p) {
+  public boolean isKo(PointOfPlay p, Board board) {
     Move tmproot = new Move();
     int stonesRemoved = 0;
     char color = Move.MOVE_BLACK;
-    boolean repeated = false;  // at least until otherwise determined
 
     PointOfPlay neighbor;
     Move testMove;
@@ -109,50 +89,50 @@ public class QuickRules extends AbstractRules {
     // if the stone were placed in order to test if this would result in self
     // capture (illegal in most rules of the game)
 
-    if (aBoard.isWhiteMove()) {
+    if (board.isWhiteMove()) {
       color = Move.MOVE_WHITE;
     }
     testMove = new Move(p.getX(), p.getY(), color, tmproot);
-    tmpPos = new Position(aBoard.getCurrPos(), testMove);
+    tmpPos = new Position(board.getCurrPos(), testMove);
     testMPos = new MarkablePosition(tmpPos);
 
     neighbor = new PointOfPlay(p.getX(), p.getY() + 1);
-    if (aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0)
+    if (board.isOnBoard(neighbor)
+        && (countLibs(neighbor, 0, testMPos, board) == 0)
         && (testMPos.getGroupSet(neighbor,
-        (HashSet) null,
-        aBoard.getBoardSize()).size() == 1)) {
+        null,
+        board.getBoardSize()).size() == 1)) {
       //System.out.println("rem + y");
       ++stonesRemoved;
       testMPos.removeStoneAt(neighbor);
     }
 
     neighbor = new PointOfPlay(p.getX() + 1, p.getY());
-    if (aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0)
+    if (board.isOnBoard(neighbor)
+        && (countLibs(neighbor, 0, testMPos, board) == 0)
         && (testMPos.getGroupSet(neighbor,
-        (HashSet) null,
-        aBoard.getBoardSize()).size() == 1)) {
+        null,
+        board.getBoardSize()).size() == 1)) {
       //System.out.println("rem + x");
       ++stonesRemoved;
       testMPos.removeStoneAt(neighbor);
     }
     neighbor = new PointOfPlay(p.getX(), p.getY() - 1);
-    if (aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0)
+    if (board.isOnBoard(neighbor)
+        && (countLibs(neighbor, 0, testMPos, board) == 0)
         && (testMPos.getGroupSet(neighbor,
-        (HashSet) null,
-        aBoard.getBoardSize()).size() == 1)) {
+        null,
+        board.getBoardSize()).size() == 1)) {
       //System.out.println("rem - y");
       ++stonesRemoved;
       testMPos.removeStoneAt(neighbor);
     }
     neighbor = new PointOfPlay(p.getX() - 1, p.getY());
-    if (aBoard.isOnBoard(neighbor)
-        && (countLibs(neighbor, 0, testMPos) == 0)
+    if (board.isOnBoard(neighbor)
+        && (countLibs(neighbor, 0, testMPos, board) == 0)
         && (testMPos.getGroupSet(neighbor,
-        (HashSet) null,
-        aBoard.getBoardSize()).size() == 1)) {
+         null,
+        board.getBoardSize()).size() == 1)) {
       //System.out.println("rem - x");
       ++stonesRemoved;
       testMPos.removeStoneAt(neighbor);
@@ -160,11 +140,8 @@ public class QuickRules extends AbstractRules {
 
     //System.out.println(stonesRemoved);
     if (stonesRemoved == 1) {
-      int x = 0;
-
-      for (Iterator i = aBoard.getPosIter(); i.hasNext(); ) {
-        ++x;
-        if (((Position) i.next()).equals(testMPos)) {
+      for (Iterator i = board.getPosIter(); i.hasNext(); ) {
+        if (i.next().equals(testMPos)) {
           return true;
         }
       }

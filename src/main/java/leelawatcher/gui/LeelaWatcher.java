@@ -16,7 +16,7 @@
 package leelawatcher.gui;
 
 import leelawatcher.goboard.Board;
-import leelawatcher.leela.AutoGtpOutputParser;
+import leelawatcher.parser.AutoGtpOutputParser;
 
 import javax.swing.*;
 import java.awt.*;

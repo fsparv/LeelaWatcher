@@ -16,19 +16,20 @@
 package leelawatcher.scorer;
 
 
+import leelawatcher.goboard.Board;
 import leelawatcher.goboard.MarkablePosition;
 import leelawatcher.goboard.PointOfPlay;
 
 public interface Rules {
-  boolean isEmpty(PointOfPlay p);
+  boolean isEmpty(PointOfPlay p, Board board);
 
-  boolean isSelfCapture(PointOfPlay p);
+  boolean isSelfCapture(PointOfPlay p, Board board);
 
-  boolean isKo(PointOfPlay p);
+  boolean isKo(PointOfPlay p, Board board);
 
-  boolean isLegalMove(PointOfPlay p);
+  boolean isLegalMove(PointOfPlay p, Board board);
 
-  int countLibs(PointOfPlay p, int counter, MarkablePosition m);
+  int countLibs(PointOfPlay p, int counter, MarkablePosition m, Board board);
     /*	  public boolean isGroupCaptured(PointOfPlay p);
     public position moveResult(PointOfPlay p);
     */
