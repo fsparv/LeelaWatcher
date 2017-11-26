@@ -184,25 +184,21 @@ public class Board {
    */
 
   public void saveGame(String filName) {
+    File gmfile = new File(filName);
     try {
-      File gmfile = new File(filName);
       if (!gmfile.createNewFile()) {
-        //todo: surface error
+        System.out.println("Did not create " + gmfile);
         return;
       }
-
-      PrintWriter writeSGF = new PrintWriter(
-          new BufferedWriter(
-              new FileWriter(gmfile)));
-      String tmp = "";
-      tmp += gm;
-
-      writeSGF.print(tmp);
-      writeSGF.close();
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
+    try (PrintWriter writeSGF = new PrintWriter(new BufferedWriter(new FileWriter(gmfile)))) {
+      writeSGF.print(gm.toString());
+      writeSGF.flush();
     } catch (IOException e) {
       System.out.println("Couldn't save game:" + e);
     }
-
   }
 
   /**
