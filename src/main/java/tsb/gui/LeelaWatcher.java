@@ -36,7 +36,6 @@ public class LeelaWatcher {
   private JSplitPane splitPane;
 
   private void createUIComponents() {
-    // TODO: place custom component creation code here
     boardView = new BoardView(currBoard);
   }
 
@@ -48,8 +47,7 @@ public class LeelaWatcher {
     frame.setSize(300, 300);
     frame.pack();
     frame.setVisible(true);
-    Thread t = new Thread(() -> {
-
+    SwingUtilities.invokeLater(() -> {
       Process proc;
       try {
         //noinspection SpellCheckingInspection
@@ -79,9 +77,7 @@ public class LeelaWatcher {
       } catch (IOException e) {
         e.printStackTrace();
       }
-
     });
-    t.start();
   }
 
   {

@@ -15,7 +15,7 @@ plugins {
     id "application"
 }
 
-mainClassName='tsb.gui.LeelaWatcher'
+mainClassName = 'tsb.gui.LeelaWatcher'
 
 shadowJar {
     baseName = 'LeelaWatcher'
