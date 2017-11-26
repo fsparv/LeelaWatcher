@@ -14,11 +14,11 @@
     limitations under the License.
  */
 
-package tsb.goboard;
+package leelawatcher.goboard;
 
-import tsb.scorer.AbstractRules;
-import tsb.scorer.QuickRules;
-import tsb.scorer.Rules;
+import leelawatcher.scorer.AbstractRules;
+import leelawatcher.scorer.QuickRules;
+import leelawatcher.scorer.Rules;
 
 import java.io.*;
 import java.util.*;

@@ -13,10 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
  */
-package tsb.gui;
+package leelawatcher.gui;
 
-import tsb.goboard.Board;
-import tsb.leela.AutoGtpOutputParser;
+import leelawatcher.goboard.Board;
+import leelawatcher.leela.AutoGtpOutputParser;
 
 import javax.swing.*;
 import java.awt.*;

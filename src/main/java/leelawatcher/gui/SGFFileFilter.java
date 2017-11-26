@@ -14,7 +14,7 @@
     limitations under the License.
  */
 
-package tsb.gui;
+package leelawatcher.gui;
 
 /**
  * A filter for smart go format files. Files that end in <code>".sgf"</code>

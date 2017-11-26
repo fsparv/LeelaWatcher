@@ -14,10 +14,10 @@
     limitations under the License.
  */
 
-package tsb.gui;
+package leelawatcher.gui;
 
-import tsb.TsbConstants;
-import tsb.goboard.Position;
+import leelawatcher.TsbConstants;
+import leelawatcher.goboard.Position;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

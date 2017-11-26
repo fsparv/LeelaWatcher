@@ -14,12 +14,12 @@
     limitations under the License.
  */
 
-package tsb.scorer;
+package leelawatcher.scorer;
 
 
-import tsb.goboard.Board;
-import tsb.goboard.MarkablePosition;
-import tsb.goboard.PointOfPlay;
+import leelawatcher.goboard.Board;
+import leelawatcher.goboard.MarkablePosition;
+import leelawatcher.goboard.PointOfPlay;
 
 public abstract class AbstractRules implements Rules {
   Board aBoard;

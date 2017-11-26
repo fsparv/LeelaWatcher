@@ -13,11 +13,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
  */
-package tsb.scorer;
+package leelawatcher.scorer;
 
 
-import tsb.goboard.MarkablePosition;
-import tsb.goboard.PointOfPlay;
+import leelawatcher.goboard.MarkablePosition;
+import leelawatcher.goboard.PointOfPlay;
 
 public interface Rules {
   boolean isEmpty(PointOfPlay p);

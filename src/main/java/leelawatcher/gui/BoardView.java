@@ -20,11 +20,11 @@
  * Created on December 16, 2002, 12:59 AM
  */
 
-package tsb.gui;
+package leelawatcher.gui;
 
-import tsb.goboard.Board;
-import tsb.goboard.Move;
-import tsb.goboard.PointOfPlay;
+import leelawatcher.goboard.Board;
+import leelawatcher.goboard.Move;
+import leelawatcher.goboard.PointOfPlay;
 
 import java.awt.*;
 import java.io.File;

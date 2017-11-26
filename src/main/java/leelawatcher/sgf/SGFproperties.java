@@ -14,7 +14,7 @@
     limitations under the License.
  */
 
-package tsb.sgf;
+package leelawatcher.sgf;
 
 // This interface defines the properties that Total Screen Ban will interpret
 // The optional KO property will not be implemented. If the move isn't legal

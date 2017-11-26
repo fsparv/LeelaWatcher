@@ -14,9 +14,9 @@
     limitations under the License.
  */
 
-package tsb.scorer;
+package leelawatcher.scorer;
 
-import tsb.goboard.*;
+import leelawatcher.goboard.*;
 
 import java.util.HashSet;
 import java.util.Iterator;
