@@ -251,9 +251,9 @@ public class Board {
       positions.add(new Position(positions.get(currPos++),
           gm.doMove(x, y)));
       Position temp = positions.get(currPos);
-      dir = new PointOfPlay(x, y + 1);
 
-      
+      boolean capturedOpponent = false;
+      dir = new PointOfPlay(x, y + 1);
       if (isOnBoard(dir) && temp.stoneAt(dir)
           && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
@@ -275,6 +275,13 @@ public class Board {
       if (isOnBoard(dir) && temp.stoneAt(dir)
           && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
+        captureGroup(dir);
+      }
+
+      // check self-capture.  We should check self-capture only if we had
+      // nothing to capture from an opponent.
+      dir = new PointOfPlay(x, y);
+      if (countLiberties(dir) == 0) {
         captureGroup(dir);
       }
     }
