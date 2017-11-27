@@ -14,11 +14,11 @@
     limitations under the License.
  */
 
-package tsb.goboard;
+package leelawatcher.goboard;
 
-import tsb.scorer.AbstractRules;
-import tsb.scorer.QuickRules;
-import tsb.scorer.Rules;
+import leelawatcher.scorer.AbstractRules;
+import leelawatcher.scorer.QuickRules;
+import leelawatcher.scorer.Rules;
 
 import java.io.*;
 import java.util.*;
@@ -61,7 +61,7 @@ public class Board {
     positions = new ArrayList<>();              // default game.
     positions.add(new Position());
     currPos = 0;
-    ruleImp = new QuickRules(this);
+    ruleImp = new QuickRules();
     whiteHasCap = 0;
     blackHasCap = 0;
   }
@@ -184,25 +184,21 @@ public class Board {
    */
 
   public void saveGame(String filName) {
+    File gmfile = new File(filName);
     try {
-      File gmfile = new File(filName);
       if (!gmfile.createNewFile()) {
-        //todo: surface error
+        System.out.println("Did not create " + gmfile);
         return;
       }
-
-      PrintWriter writeSGF = new PrintWriter(
-          new BufferedWriter(
-              new FileWriter(gmfile)));
-      String tmp = "";
-      tmp += gm;
-
-      writeSGF.print(tmp);
-      writeSGF.close();
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
+    try (PrintWriter writeSGF = new PrintWriter(new BufferedWriter(new FileWriter(gmfile)))) {
+      writeSGF.print(gm.toString());
+      writeSGF.flush();
     } catch (IOException e) {
       System.out.println("Couldn't save game:" + e);
     }
-
   }
 
   /**
@@ -249,7 +245,7 @@ public class Board {
    */
 
   public void doMove(int x, int y) {
-    if (!gm.isGameOver() && ruleImp.isLegalMove(new PointOfPlay(x, y))) {
+    if (!gm.isGameOver() && ruleImp.isLegalMove(new PointOfPlay(x, y), this)) {
       boolean wmove = isWhiteMove();
       PointOfPlay dir;
       positions.add(new Position(positions.get(currPos++),
@@ -314,7 +310,7 @@ public class Board {
    * Find out how many liberties the group occupying a given point has.
    * <p>
    * This method invokes {@link
-   * AbstractRules#countLibs(PointOfPlay, int, MarkablePosition)
+   * AbstractRules#countLibs(PointOfPlay, int, MarkablePosition, Board)
    * AbstractRules.countLibs(PointOfPlay, int, MarkablePosition)} and
    * returns the result.
    *
@@ -324,7 +320,7 @@ public class Board {
    */
 
   public int countLiberties(PointOfPlay p) {
-    return ruleImp.countLibs(p, 0, null);
+    return ruleImp.countLibs(p, 0, null, this);
   }
 
   /**
@@ -414,6 +410,10 @@ public class Board {
   }
 
   public void pass() {
+
+  }
+
+  public void setUp() {
 
   }
 }

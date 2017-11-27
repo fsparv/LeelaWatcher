@@ -13,10 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
  */
-package tsb.leela;
+package leelawatcher.parser;
 
-import tsb.goboard.PointOfPlay;
-import tsb.gui.BoardView;
+import leelawatcher.goboard.PointOfPlay;
+import leelawatcher.gui.BoardView;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

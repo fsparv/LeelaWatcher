@@ -14,7 +14,7 @@
     limitations under the License.
  */
 
-package tsb.goboard;
+package leelawatcher.goboard;
 
 import java.util.Arrays;
 import java.util.List;

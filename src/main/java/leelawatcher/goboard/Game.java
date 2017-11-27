@@ -14,10 +14,10 @@
     limitations under the License.
  */
 
-package tsb.goboard;
+package leelawatcher.goboard;
 
 
-import tsb.sgf.SGFbuilder;
+import leelawatcher.sgf.SGFbuilder;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Date;

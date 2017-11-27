@@ -14,31 +14,29 @@
     limitations under the License.
  */
 
-package tsb.scorer;
+package leelawatcher.scorer;
 
 
-import tsb.goboard.Board;
-import tsb.goboard.MarkablePosition;
-import tsb.goboard.PointOfPlay;
+import leelawatcher.goboard.Board;
+import leelawatcher.goboard.MarkablePosition;
+import leelawatcher.goboard.PointOfPlay;
 
 public abstract class AbstractRules implements Rules {
-  Board aBoard;
 
-  protected AbstractRules(Board b) {
-    aBoard = b;
+  protected AbstractRules(){
   }
 
-  public abstract boolean isSelfCapture(PointOfPlay p);
+  public abstract boolean isSelfCapture(PointOfPlay p, Board board);
 
-  public abstract boolean isKo(PointOfPlay p);
+  public abstract boolean isKo(PointOfPlay p, Board board);
 
-  public abstract boolean isLegalMove(PointOfPlay p);
+  public abstract boolean isLegalMove(PointOfPlay p, Board board);
 
   /**
-   * Tests for the presence of a stone at PointOfPlay p on aBoard.
+   * Tests for the presence of a stone at PointOfPlay p on board.
    */
-  public boolean isEmpty(PointOfPlay p) {
-    return !(aBoard.getCurrPos().stoneAt(p));
+  public boolean isEmpty(PointOfPlay p, Board board) {
+    return !(board.getCurrPos().stoneAt(p));
   }
 
   /**
@@ -62,8 +60,8 @@ public abstract class AbstractRules implements Rules {
    * third argument should be null. Calling this method on an empty PointOfPlay
    * will return 1.
    */
-  public int countLibs(PointOfPlay p, int hasAlready, MarkablePosition pos) {
-    int result = doCountLibs(p, hasAlready, pos);
+  public int countLibs(PointOfPlay p, int hasAlready, MarkablePosition pos, Board board) {
+    int result = doCountLibs(p, hasAlready, pos, board);
     if (pos != null) // Some usages do pass null to pos.
     {
       pos.clearMarks();
@@ -74,51 +72,51 @@ public abstract class AbstractRules implements Rules {
   // This method is wrapped by the public version coungLibs so that the
   // marks used to control recursion can be removed after all recursion is
   // completed.
-  private int doCountLibs(PointOfPlay p, int hasAlready, MarkablePosition pos) {
+  private int doCountLibs(PointOfPlay p, int hasAlready, MarkablePosition pos, Board board) {
     if (pos == null) {
       //System.out.println("InitialCall");
       hasAlready = 0;
-      pos = new MarkablePosition(aBoard.getCurrPos());
+      pos = new MarkablePosition(board.getCurrPos());
     }
-    if (aBoard.isOnBoard(p)) {
+    if (board.isOnBoard(p)) {
       //System.out.println(p);
       pos.setMark(new PointOfPlay(p.getX(), p.getY()));
       //System.out.println("On Board:" + p );
       if (pos.stoneAt(p)) {
         // recurse north if we can (plus Y)
         PointOfPlay dir = new PointOfPlay(p.getX(), p.getY() + 1);
-        if (aBoard.isOnBoard(dir) && !pos.isMarked(dir)
+        if (board.isOnBoard(dir) && !pos.isMarked(dir)
             && !((pos.blackAt(p) && pos.whiteAt(dir))
             || (pos.whiteAt(p) && pos.blackAt(dir)))) {
           //System.out.println("north="+dir+"p="+p);
-          hasAlready = doCountLibs(dir, hasAlready, pos);
+          hasAlready = doCountLibs(dir, hasAlready, pos, board);
         }
 
         // recurse east if we can (plus X)
         dir = new PointOfPlay(p.getX() + 1, p.getY());
-        if (aBoard.isOnBoard(dir) && !pos.isMarked(dir)
+        if (board.isOnBoard(dir) && !pos.isMarked(dir)
             && !((pos.blackAt(p) && pos.whiteAt(dir))
             || (pos.whiteAt(p) && pos.blackAt(dir)))) {
           //System.out.println("east="+dir+"p="+p);
-          hasAlready = doCountLibs(dir, hasAlready, pos);
+          hasAlready = doCountLibs(dir, hasAlready, pos, board);
         }
 
         // recurse south if we can (minus Y)
         dir = new PointOfPlay(p.getX(), p.getY() - 1);
-        if (aBoard.isOnBoard(dir) && !pos.isMarked(dir)
+        if (board.isOnBoard(dir) && !pos.isMarked(dir)
             && !((pos.blackAt(p) && pos.whiteAt(dir))
             || (pos.whiteAt(p) && pos.blackAt(dir)))) {
           //System.out.println("south="+dir+"p="+p);
-          hasAlready = doCountLibs(dir, hasAlready, pos);
+          hasAlready = doCountLibs(dir, hasAlready, pos, board);
         }
 
         // recurse west if we can (minus X)
         dir = new PointOfPlay(p.getX() - 1, p.getY());
-        if (aBoard.isOnBoard(dir) && !pos.isMarked(dir)
+        if (board.isOnBoard(dir) && !pos.isMarked(dir)
             && !((pos.blackAt(p) && pos.whiteAt(dir))
             || (pos.whiteAt(p) && pos.blackAt(dir)))) {
           //System.out.println("west="+dir+"p="+p);
-          hasAlready = doCountLibs(dir, hasAlready, pos);
+          hasAlready = doCountLibs(dir, hasAlready, pos, board);
         }
       } else {
         //System.out.println("lib at:" + p);
@@ -130,6 +128,8 @@ public abstract class AbstractRules implements Rules {
 
     return hasAlready;
   }
+
+
 }
 
 /*

@@ -14,7 +14,7 @@
     limitations under the License.
  */
 
-package tsb;
+package leelawatcher;
 
 /**
  * A central location for application wide constants. Any immutable value
