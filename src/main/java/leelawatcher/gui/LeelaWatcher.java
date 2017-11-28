@@ -20,6 +20,8 @@ import leelawatcher.parser.AutoGtpOutputParser;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class LeelaWatcher {
   private BoardView boardView;
   private JScrollPane textScrollPane;
   private JSplitPane splitPane;
+  private static Process proc;
 
   private void createUIComponents() {
     boardView = new BoardView(currBoard);
@@ -45,10 +48,16 @@ public class LeelaWatcher {
     frame.setContentPane(leelaWatcher.$$$getRootComponent$$$());
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     frame.setSize(300, 300);
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        proc.destroyForcibly();
+        super.windowClosing(e);
+      }
+    });
     frame.pack();
     frame.setVisible(true);
     SwingUtilities.invokeLater(() -> {
-      Process proc;
       try {
         //noinspection SpellCheckingInspection
         String cmd = "./autogtp";
