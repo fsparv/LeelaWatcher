@@ -65,7 +65,7 @@ public class LeelaWatcher {
             JTextArea ta = leelaWatcher.leelaOutputTextArea;
             ta.setText(ta.getText() + evt.getNewValue());
             JScrollBar vertical = leelaWatcher.textScrollPane.getVerticalScrollBar();
-            vertical.setValue( vertical.getMaximum() );
+            vertical.setValue(vertical.getMaximum());
           }
           if ("inProgress".equals(evt.getPropertyName())) {
             if (Objects.equals(evt.getNewValue(), false)) {

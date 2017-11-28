@@ -198,9 +198,14 @@ public class Position implements Cloneable {
 
     this.checkValid();
     for (int y = colMasks.length - 1; y >= 0; y--) {
+      if (y < 10) {
+        tmp.append(" ");
+      }
       tmp.append(y).append(":");
       for (int x = 0; x < colMasks.length; x++) {
-        tmp.append(colorAt(x, y));
+        char c = colorAt(x, y);
+        c = c == Move.EMPTY ?'.' : c;
+        tmp.append(" ").append(c);
       }
       tmp.append("\n");
     }

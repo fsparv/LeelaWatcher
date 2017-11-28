@@ -15,6 +15,7 @@
  */
 package leelawatcher.parser;
 
+import leelawatcher.goboard.IllegalMoveException;
 import leelawatcher.goboard.PointOfPlay;
 import leelawatcher.gui.BoardView;
 
@@ -31,25 +32,26 @@ public class AutoGtpOutputParser {
    * This pattern is meant to report a match for one of 3 groups:
    * 1. anything ending in 'set.'
    */
-  public static final Pattern EVENT = Pattern.compile("^(.*set\\.|\\s*\\d+\\s\\(\\w+\\)\\s*|Game).*", Pattern.DOTALL);
+  private static final Pattern EVENT = Pattern.compile("^(.*set\\.|\\s*\\d+\\s\\(\\w+\\)\\s*|Game).*", Pattern.DOTALL);
   private static final Pattern MOVE_EVENT = Pattern.compile("\\s*\\d+\\s*\\((\\w+)\\)\\s*");
   private static final Pattern MOVE = Pattern.compile("(?:(.)(\\d+))|(pass)");
-  BoardView boardView;
+  private BoardView boardView;
   private boolean inProgress = false;
 
+  @SuppressWarnings("unused")
   public String getMessage() {
     return message;
   }
 
-  public void setMessage(String message) {
+  private void setMessage(String message) {
     String old = this.message;
     this.message = message;
     support.firePropertyChange("message", old, message);
   }
 
-  String message;
+  private String message;
 
-  PropertyChangeSupport support = new PropertyChangeSupport(this);
+  private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 
   /**
@@ -94,6 +96,10 @@ public class AutoGtpOutputParser {
             setInProgress(false);
           }
         }
+      } catch (IllegalMoveException e) {
+        message("Illegal move attempted:" + e.getProposedMove());
+        message("Position:");
+        message(e.getPosition().toString());
       } catch (Exception e) {
         message("oh noes!!!");
         e.printStackTrace();
@@ -140,15 +146,13 @@ public class AutoGtpOutputParser {
     this.support.addPropertyChangeListener(listener);
   }
 
-  public void removePropertyChangeListener(PropertyChangeListener listener) {
-    this.support.removePropertyChangeListener(listener);
-  }
 
-
+  @SuppressWarnings("WeakerAccess")
   public boolean isInProgress() {
     return inProgress;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setInProgress(boolean inProgress) {
     boolean old = this.inProgress;
     this.inProgress = inProgress;

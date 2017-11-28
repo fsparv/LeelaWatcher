@@ -70,6 +70,7 @@ public class Move
    * designate a black move throughout the application.
    */
   public final static char MOVE_BLACK = 'B';
+  public static final char EMPTY = 'E';
 
   /**
    * <code>MOVE_ROOT</code> is the character that should be used to
@@ -481,7 +482,7 @@ public class Move
     remDup(temp, other1);
     remDup(temp, other2);
 
-    addEmpty.add(temp);            // if we get here the point is unique
+    target.add(temp);            // if we get here the point is unique
     // so we can go ahead and add it
   }
 
@@ -574,7 +575,7 @@ public class Move
     if (this.isMove())             // setup nodes and moves MUST not be
       return;                    // mixed!
 
-    remDup(temp,addEmpty);
+    remDup(temp, addEmpty);
   }
 
   /**
@@ -598,7 +599,7 @@ public class Move
     if (this.isMove())             // setup nodes and Moves MUST not be
       return;                    // mixed!
 
-    remDup(temp,addWhite);
+    remDup(temp, addWhite);
   }
 
 
@@ -946,7 +947,7 @@ public class Move
   }
 
   /**
-   * Return an array of vectors containg the setup information for this
+   * Return an array of vectors containing the setup information for this
    * instance.
    * <p>
    * The first Vector contains points specified as empty. The second
@@ -958,7 +959,7 @@ public class Move
    */
   public List<PointOfPlay>[] getSetupInfo() {
     @SuppressWarnings("unchecked")
-    List<PointOfPlay>[] tmp = new ArrayList[3];
+    List<PointOfPlay>[] tmp = new List[3];
 
     tmp[0] = Collections.unmodifiableList(addEmpty);
     tmp[1] = Collections.unmodifiableList(addBlack);
