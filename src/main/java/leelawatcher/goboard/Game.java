@@ -79,6 +79,7 @@ public class Game {
   private int handiLeft;           // how many handicap stones may be placed
   private boolean gameOver;        // 2 consecutive passes set this to true
   private boolean whiteLast;       // true if it is black's move
+
   private Move currMove;           // Points to current move
   private Move prevMove;           // Points to last move
 
@@ -183,10 +184,15 @@ public class Game {
     }
 
     prevMove = currMove;
-    if (prevMove.isWhite() || (prevMove.isRoot() && (_handi == 0))) {
-      stoneColor = 'B';            // if white moved last, black stone
+    // todo: this needs to move to trusting whiteLast all the time...
+    if (currMove.isSetup()) {
+      stoneColor = whiteLast ? Move.MOVE_BLACK : Move.MOVE_WHITE;
     } else {
-      stoneColor = 'W';
+      if (prevMove.isWhite() || (prevMove.isRoot() && (_handi == 0))) {
+        stoneColor = 'B';            // if white moved last, black stone
+      } else {
+        stoneColor = 'W';
+      }
     }
 
     currMove = new Move(xcoor, ycoor, stoneColor, prevMove);
@@ -195,6 +201,19 @@ public class Game {
 
     return currMove;
 
+  }
+
+  public void doSetup(char type, int xcoor, int ycoor, boolean blackToMove) {
+    if (!currMove.isSetup()) {
+      currMove = new Move(prevMove);
+    }
+    switch (type) {
+      case Move.EMPTY      : currMove.setupEmpty(xcoor,ycoor); break;
+      case Move.MOVE_BLACK : currMove.setupBlack(xcoor,ycoor); break;
+      case Move.MOVE_WHITE : currMove.setupWhite(xcoor,ycoor); break;
+    }
+    currMove.setColorMoveNext(blackToMove ? Move.MOVE_BLACK : Move.MOVE_WHITE);
+    whiteLast = blackToMove;
   }
 
   /**
@@ -806,6 +825,15 @@ public class Game {
 
   public Move movesRoot() {
     return _gameRoot;
+  }
+
+  /**
+   * get a reference to the last move made.
+   *
+   * @return a reference to the move that the game is currently on.
+   */
+  public Move getCurrMove() {
+    return currMove;
   }
 
   /**

@@ -90,17 +90,17 @@ public class Board {
    *
    * @return The integer number of stones captured by white.
    */
-
+  @SuppressWarnings("unused")
   public int getWhiteHasCap() {
     return whiteHasCap;
   }
 
   /**
-   * Find out how many stones have been captured by the blak player.
+   * Find out how many stones have been captured by the black player.
    *
    * @return The integer number of stones captured by black.
    */
-
+  @SuppressWarnings("unused")
   public int getBlackHasCap() {
     return blackHasCap;
   }
@@ -208,6 +208,7 @@ public class Board {
    * depending on the setting of <code>Game._markUndos</code> and
    * <code>Game.remUndo</code>.
    */
+  @SuppressWarnings("unused")
   public void undoMove() {
     if (currPos > 0) {
       gm.undoMove();
@@ -221,7 +222,7 @@ public class Board {
    * <p>
    * This sets the result for the game, and prevents further move entry.
    */
-
+  @SuppressWarnings("unused")
   public void doResign() {
     if (gm.isWMove()) {
       gm.setGameResult("B+R");
@@ -244,35 +245,53 @@ public class Board {
    * @param y The vertical coordinate at which to place the stone.
    */
 
-  public void doMove(int x, int y) {
-    if (!gm.isGameOver() && ruleImp.isLegalMove(new PointOfPlay(x, y), this)) {
-
+  public void doMove(int x, int y) throws IllegalMoveException {
+    PointOfPlay proposedMove = new PointOfPlay(x, y);
+    boolean legalMove = ruleImp.isLegalMove(proposedMove, this);
+    if (!legalMove) {
+      throw new IllegalMoveException(proposedMove, positions.get(currPos));
+    }
+    if (!gm.isGameOver()) {
+      boolean wmove = isWhiteMove();
       PointOfPlay dir;
       positions.add(new Position(positions.get(currPos++),
           gm.doMove(x, y)));
       Position temp = positions.get(currPos);
+
       dir = new PointOfPlay(x, y + 1);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
       dir = new PointOfPlay(x + 1, y);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
       dir = new PointOfPlay(x, y - 1);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
       dir = new PointOfPlay(x - 1, y);
       if (isOnBoard(dir) && temp.stoneAt(dir)
+          && temp.blackAt(dir) == wmove
           && (countLiberties(dir) == 0)) {
         captureGroup(dir);
       }
+
+      // check self-capture.
+      if (ruleImp.isSelfCaptureAllowed()) {
+        if (countLiberties(proposedMove) == 0) {
+          captureGroup(dir);
+        }
+      }
+    } else {
+      System.err.println("Warning: move after end of game ignored");
     }
-    //temp.dPrint();
   }
 
   /**
@@ -313,6 +332,7 @@ public class Board {
    * @return The number of liberties of the group at point p
    */
 
+  @SuppressWarnings("WeakerAccess")
   public int countLiberties(PointOfPlay p) {
     return ruleImp.countLibs(p, 0, null, this);
   }
@@ -342,7 +362,7 @@ public class Board {
    *          group in question.
    * @return The number of stones belonging to the group.
    */
-
+  @SuppressWarnings("unused")
   public int countGroup(PointOfPlay p) {
     return enumerateGroup(p).size();
   }
@@ -358,7 +378,7 @@ public class Board {
    *          group in question.
    * @return The number of stones captured.
    */
-  @SuppressWarnings("UnusedReturnValue")
+  @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
   public int captureGroup(PointOfPlay p) {
     HashSet groupList = enumerateGroup(p);
     int result = groupList.size();
@@ -403,12 +423,29 @@ public class Board {
     return temp.getGroupSet(p, null, getBoardSize());
   }
 
-  public void pass() {
-
-  }
-
-  public void setUp() {
-
+  /**
+   * Sets up a particular position on the board. It is entirely legal to overwrite existing
+   * stones, though it is bad style to overwrite an existing stone with one of the same color.
+   *
+   * @param white a list of points that should contain white stones
+   * @param black a list of points that should contain black stones
+   * @param empty a list of points that should not contain a stone
+   * @param blackToMove true if black should move first in the resulting position,
+   *                    false if white should move first.
+   */
+  public void setUp(List<PointOfPlay> white, List<PointOfPlay> black, List<PointOfPlay> empty, boolean blackToMove) {
+    Move initalMove = this.gm.getCurrMove();
+    white.forEach(p -> this.gm.doSetup(Move.MOVE_WHITE, p.getX(), p.getY(), blackToMove));
+    black.forEach(p -> this.gm.doSetup(Move.MOVE_BLACK, p.getX(), p.getY(), blackToMove));
+    empty.forEach(p -> this.gm.doSetup(Move.EMPTY, p.getX(), p.getY(), blackToMove));
+    if (initalMove == this.gm.getCurrMove()) {
+      // was already a setup move to which we added points, need to recreate the existing position.
+      positions.remove(currPos);
+      positions.add(new Position(positions.get(currPos), this.gm.getCurrMove()));
+    } else {
+      // we created a new setup move
+      positions.add(new Position(positions.get(currPos++), this.gm.getCurrMove()));
+    }
   }
 }
 

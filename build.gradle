@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenCentral()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -21,4 +22,12 @@ shadowJar {
     baseName = 'LeelaWatcher'
     classifier = null
     version = 1.0
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile('junit:junit:4.12')
 }

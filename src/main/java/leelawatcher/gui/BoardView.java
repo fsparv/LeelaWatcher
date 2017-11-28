@@ -23,6 +23,7 @@
 package leelawatcher.gui;
 
 import leelawatcher.goboard.Board;
+import leelawatcher.goboard.IllegalMoveException;
 import leelawatcher.goboard.Move;
 import leelawatcher.goboard.PointOfPlay;
 
@@ -53,7 +54,7 @@ public class BoardView extends javax.swing.JPanel {
   /**
    * Creates new form boardView
    */
-  public BoardView(Board aBoard) {
+  BoardView(Board aBoard) {
     this.setSize(210, 210);
     theGame = aBoard;
   }
@@ -94,18 +95,18 @@ public class BoardView extends javax.swing.JPanel {
     paint(g);
   }
 
-  public void move(PointOfPlay pop) {
+  public void move(PointOfPlay pop) throws IllegalMoveException {
     if (pop != null) {
       theGame.doMove(pop.getX(), pop.getY());
     } else {
       // pass
-      theGame.doMove(Move.PASS,Move.PASS);
+      theGame.doMove(Move.PASS, Move.PASS);
     }
     repaint();
   }
 
   public void reset() {
-    theGame.newGame("Leela","Leela",0,7.5f);
+    theGame.newGame("Leela", "Leela", 0, 7.5f);
     repaint();
   }
 
@@ -116,7 +117,7 @@ public class BoardView extends javax.swing.JPanel {
 
   void saveGame() {
     String format = DateTimeFormatter.ISO_INSTANT
-        .format(new Date().toInstant()).replaceAll(":", "_" );
+        .format(new Date().toInstant()).replaceAll(":", "_");
     File file = new File(format + ".sgf");
     System.out.println("Saving as:" + file);
     theGame.saveGame(file.getPath());

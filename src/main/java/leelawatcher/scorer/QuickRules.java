@@ -75,6 +75,11 @@ public class QuickRules extends AbstractRules {
     return (countLibs(p, 0, testMPos, board) == 0) && !captureOpponent;
   }
 
+  @Override
+  public boolean isSelfCaptureAllowed() {
+    return false;
+  }
+
   public boolean isKo(PointOfPlay p, Board board) {
     Move tmproot = new Move();
     int stonesRemoved = 0;
@@ -131,7 +136,7 @@ public class QuickRules extends AbstractRules {
     if (board.isOnBoard(neighbor)
         && (countLibs(neighbor, 0, testMPos, board) == 0)
         && (testMPos.getGroupSet(neighbor,
-         null,
+        null,
         board.getBoardSize()).size() == 1)) {
       //System.out.println("rem - x");
       ++stonesRemoved;

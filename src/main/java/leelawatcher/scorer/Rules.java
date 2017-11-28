@@ -25,6 +25,8 @@ public interface Rules {
 
   boolean isSelfCapture(PointOfPlay p, Board board);
 
+  boolean isSelfCaptureAllowed();
+
   boolean isKo(PointOfPlay p, Board board);
 
   boolean isLegalMove(PointOfPlay p, Board board);

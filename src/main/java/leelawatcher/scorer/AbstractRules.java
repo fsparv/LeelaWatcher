@@ -21,9 +21,10 @@ import leelawatcher.goboard.Board;
 import leelawatcher.goboard.MarkablePosition;
 import leelawatcher.goboard.PointOfPlay;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class AbstractRules implements Rules {
 
-  protected AbstractRules(){
+  protected AbstractRules() {
   }
 
   public abstract boolean isSelfCapture(PointOfPlay p, Board board);
