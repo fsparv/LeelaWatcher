@@ -34,7 +34,7 @@ public class AutoGtpOutputParser {
    */
   private static final Pattern EVENT = Pattern.compile("^(.*set\\.|\\s*\\d+\\s\\(\\w+\\)\\s*|Game).*", Pattern.DOTALL);
   private static final Pattern MOVE_EVENT = Pattern.compile("\\s*\\d+\\s*\\((\\w+)\\)\\s*");
-  private static final Pattern MOVE = Pattern.compile("(?:(.)(\\d+))|(pass)");
+  private static final Pattern MOVE = Pattern.compile("(?:(.)(\\d+))|(pass)|(resign)");
   private BoardView boardView;
   private boolean inProgress = false;
 
@@ -123,13 +123,13 @@ public class AutoGtpOutputParser {
     return null;
   }
 
-  private PointOfPlay parseMove(String move) {
+  PointOfPlay parseMove(String move) {
     Matcher m = MOVE.matcher(move);
     if (!m.matches()) {
       throw new RuntimeException("BAD MOVE: " + move);
     }
     String xChar = m.group(1);
-    if ("pass".equals(m.group(3))) {
+    if ("pass".equals(m.group(3)) || "resign".equals(m.group(4))) {
       return null;
     }
     String yNum = m.group(2);
