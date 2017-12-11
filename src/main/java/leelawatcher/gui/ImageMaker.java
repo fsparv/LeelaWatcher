@@ -18,6 +18,7 @@ package leelawatcher.gui;
 
 import leelawatcher.TsbConstants;
 import leelawatcher.goboard.Position;
+import leelawatcher.goboard.PointOfPlay;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -88,7 +89,7 @@ public class ImageMaker implements TsbConstants {
 
   // paint a stone at a given coordinate specified in pixels
 
-  //  public void paintStone2D(int x, int y, Color player, 
+  //  public void paintStone2D(int x, int y, Color player,
   //                         int pixSize, Graphics2D G)
   //      {
   //          Ellipse2D.Float stone = new Ellipse2D.Float(x,y,pixSize,pixSize);
@@ -258,21 +259,25 @@ public class ImageMaker implements TsbConstants {
     int stnSize = Math.round(lineSp - 1);
 
     for (int x = 0; x < size; x++)
-      for (int y = 0; y < size; y++) {
-        if (pos.blackAt(x, y)) {
+      for (int y = 0; y < size; y++)
+        if (pos.stoneAt(x, y))
           paintStone(Math.round((lineSp / 2 + x * lineSp)),
-              Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
-              Color.black, stnSize, BGraphs);
-          continue;
-        }
-        if (pos.whiteAt(x, y)) {
-          paintStone(Math.round((lineSp / 2 + x * lineSp)),
-              Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
-              Color.white, stnSize, BGraphs);
-        }
-      }
+                     Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
+                     (pos.blackAt(x, y)) ? Color.black : Color.white,
+                     stnSize, BGraphs);
+
+    // mark last move
+    PointOfPlay lastMove = pos.getLastMove();
+    float dotScaleDownFactor = 6;
+
+    if (lastMove != null) {
+        BGraphs.setColor(pos.blackAt(lastMove.getX(), lastMove.getY()) ? Color.white : Color.black);
+        BGraphs.fillOval(Math.round((lineSp / 2 + lastMove.getX() * lineSp)+stnSize*((dotScaleDownFactor/2)-1)/dotScaleDownFactor),
+                         Math.round((lineSp / 2 + ((size - 1) - lastMove.getY()) * lineSp)+stnSize*((dotScaleDownFactor/2)-1)/dotScaleDownFactor),
+                         stnSize/(int)(dotScaleDownFactor/2),
+                         stnSize/(int)(dotScaleDownFactor/2));
+    }
 
     return BoardImg;
   }
 }
-    
