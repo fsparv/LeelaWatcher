@@ -32,6 +32,11 @@ import java.net.URL;
  */
 public class ImageMaker implements TsbConstants {
 
+  // drawing fine tuning
+  float lastPlayedDotScaledDownFactor = 6;
+  float shadowOffset = 0.12f;
+  Color shadowColor = new Color(0, 0, 0, 90);
+
   // Constants
 
   public static final int PAINT_ALL = 0;
@@ -106,8 +111,8 @@ public class ImageMaker implements TsbConstants {
     //System.out.println("by pixel"+x+","+y);
 
     // draw shadow first
-    g.setColor(new Color(0,0,0,100));
-    g.fillOval(x+pixSize/10, y+pixSize/10, pixSize, pixSize);
+    g.setColor(shadowColor);
+    g.fillOval(x+(int)(pixSize*shadowOffset), y+(int)(pixSize*shadowOffset), pixSize, pixSize);
 
     // draw stone itself
     g.setColor(Color.black);
@@ -264,25 +269,24 @@ public class ImageMaker implements TsbConstants {
 
     int stnSize = Math.round(lineSp - 1);
 
+    // render it top down  so shadows work correctly
     for (int x = 0; x < size; x++)
-      for (int y = 0; y < size; y++)
+      for (int y = size-1; y >= 0; --y)
         if (pos.stoneAt(x, y))
           paintStone(Math.round((lineSp / 2 + x * lineSp)),
                      Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
                      (pos.blackAt(x, y)) ? Color.black : Color.white,
                      stnSize, BGraphs);
 
-
     // mark last move
     PointOfPlay lastMove = pos.getLastMove();
-    float dotScaleDownFactor = 6;
-
+    float offsetFacor = ((lastPlayedDotScaledDownFactor/2)-1)/lastPlayedDotScaledDownFactor;
     if (lastMove != null) {
         BGraphs.setColor(pos.blackAt(lastMove.getX(), lastMove.getY()) ? Color.white : Color.black);
-        BGraphs.fillOval(Math.round((lineSp / 2 + lastMove.getX() * lineSp)+stnSize*((dotScaleDownFactor/2)-1)/dotScaleDownFactor),
-                         Math.round((lineSp / 2 + ((size - 1) - lastMove.getY()) * lineSp)+stnSize*((dotScaleDownFactor/2)-1)/dotScaleDownFactor),
-                         stnSize/(int)(dotScaleDownFactor/2),
-                         stnSize/(int)(dotScaleDownFactor/2));
+        BGraphs.fillOval(Math.round((lineSp / 2 + lastMove.getX() * lineSp)+stnSize*offsetFacor),
+                         Math.round((lineSp / 2 + ((size - 1) - lastMove.getY()) * lineSp)+stnSize*offsetFacor),
+                         stnSize/(int)(lastPlayedDotScaledDownFactor/2),
+                         stnSize/(int)(lastPlayedDotScaledDownFactor/2));
     }
 
     return BoardImg;
