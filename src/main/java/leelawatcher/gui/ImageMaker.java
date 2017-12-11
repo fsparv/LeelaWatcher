@@ -107,9 +107,9 @@ public class ImageMaker implements TsbConstants {
 
     // draw shadow first
     g.setColor(new Color(0,0,0,100));
-    g.fillOval(x+pixSize/8, y+pixSize/8, pixSize, pixSize);
+    g.fillOval(x+pixSize/10, y+pixSize/10, pixSize, pixSize);
 
-    // draw stone istself
+    // draw stone itself
     g.setColor(Color.black);
     g.fillOval(x, y, pixSize, pixSize);
     g.setColor(player);
