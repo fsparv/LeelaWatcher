@@ -104,6 +104,12 @@ public class ImageMaker implements TsbConstants {
   public void paintStone(int x, int y, Color player,
                          int pixSize, Graphics g) {
     //System.out.println("by pixel"+x+","+y);
+
+    // draw shadow first
+    g.setColor(new Color(0,0,0,100));
+    g.fillOval(x+pixSize/8, y+pixSize/8, pixSize, pixSize);
+
+    // draw stone istself
     g.setColor(Color.black);
     g.fillOval(x, y, pixSize, pixSize);
     g.setColor(player);
@@ -265,6 +271,7 @@ public class ImageMaker implements TsbConstants {
                      Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
                      (pos.blackAt(x, y)) ? Color.black : Color.white,
                      stnSize, BGraphs);
+
 
     // mark last move
     PointOfPlay lastMove = pos.getLastMove();
