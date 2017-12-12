@@ -47,6 +47,10 @@ public class LeelaWatcher {
   }
 
   public static void main(String[] args) throws IOException {
+    for (String arg : args) {
+      System.out.println(arg);
+    }
+
     for (int i = 2; i < args.length; ++i) {
       // parse all other command line arguments here
       System.out.println("parsing arg " + args[i]);
@@ -71,6 +75,14 @@ public class LeelaWatcher {
           super.windowClosing(e);
         }
       });
+
+    if (hideOutputWindow) {
+      leelaWatcher.leelaOutputTextArea.setRows(0);
+      leelaWatcher.leelaOutputTextArea.setPreferredSize(new Dimension(0,0));
+      leelaWatcher.splitPane.getRightComponent().setVisible(false);
+      leelaWatcher.splitPane.setDividerSize(0);
+    }
+
     frame.pack();
     frame.setVisible(true);
     SwingUtilities.invokeLater(() -> {
@@ -79,6 +91,7 @@ public class LeelaWatcher {
           String cmd = "./autogtp";
           if (args.length > 1) {
             cmd = args[1];
+            System.out.println("cmd is " + cmd);
           }
           ProcessBuilder pb = new ProcessBuilder(cmd);
           pb.directory(new File(args[0]));
@@ -131,18 +144,8 @@ public class LeelaWatcher {
     splitPane.setLeftComponent(boardView);
     textScrollPane = new JScrollPane();
     splitPane.setRightComponent(textScrollPane);
-
-    if (!hideOutputWindow) {
-      leelaOutputTextArea = new JTextArea();
-      leelaOutputTextArea.setRows(1);
-    }else{
-      leelaOutputTextArea = new JTextArea();
-      leelaOutputTextArea.setPreferredSize(new Dimension(0,0));
-
-      splitPane.getRightComponent().setVisible(false);
-      splitPane.setDividerSize(0);
-    }
-
+    leelaOutputTextArea = new JTextArea();
+    leelaOutputTextArea.setRows(4);
     textScrollPane.setViewportView(leelaOutputTextArea);
   }
 
