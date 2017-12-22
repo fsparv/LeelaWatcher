@@ -11,17 +11,19 @@ Please note that this is a fairly quick hack, and I resurected code I wrote 15 y
 # Running
 Before you can use the LeelaWatcher you must first obtain a current copy of Leela Zero and the autogtp program that comes with it. Instructions can be found on the [Leela Zero](https://github.com/gcp/leela-zero) site.
 
+You will also need to install the [Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
+
 After you have Leela Zero and autogtp, you can run the latest version of LeelaWatcher ([found here](https://github.com/fsparv/LeelaWatcher/releases))
 
-On linux/mac (what I use) the command looks like this
+On Linux (what I use) the command looks like this
 
     java -jar LeelaWatcher-1.0.1.jar /home/gus/leelaz/leela-zero/autogtp/
     
-For those not familiar with java, what that line does is it invokes the [Java Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)  and instructs it to run the code found in LeelaWatcher.jar. Everything after LeelaWatcher.jar is passed to the program as [arguments](https://en.wikipedia.org/wiki/Command-line_interface#Arguments)
+Mac should be similar. For those not familiar with java, what that line does is it invokes java and instructs it to run the code found in LeelaWatcher.jar. Everything after LeelaWatcher.jar is passed to the program as [arguments](https://en.wikipedia.org/wiki/Command-line_interface#Arguments)
 
-Two arguments are possible, the first one is the location where LeelaWatcher will search for the autogtp program, the second is optional, but if supplied it will be interpreted as the name of the autogtp program file (the compiled executable that you created when you built auto gtp). This second argument is usually only needed on windows. 
+Two arguments are possible, the first one is the location where LeelaWatcher will search for the autogtp program, the second is optional, but if supplied it will be interpreted as the name of the autogtp program file (the compiled executable that you created when you built auto gtp). This second argument is usually only needed on Windows. 
 
-Here's a windows example, that assumes that your autogtp is in a folder named `D:\My Folders\Downloads\leela-zero-0.4-window` :
+Here's a Windows example, that assumes that your autogtp is in a folder named `D:\My Folders\Downloads\leela-zero-0.4-window` :
 
     C:>java -jar LeelaWatcher-1.0.1.jar D:\My Folders\Downloads\leela-zero-0.4-windows autogtp.exe
 
@@ -30,4 +32,4 @@ or alternately
     C:> cd D:\My Folders\Downloads\leela-zero-0.4-windows
     D:\My Folders\Downloads\leela-zero-0.4-windows>java -jar LeelaWatcher-1.0.1.jar . autogtp.exe
     
-Note that the '.' in the second example is a symbol that means "the current directory." Also if I've messed up the windows example let me know by filing an issue with an example of the corrected command line(s). I don't use windows very much, and haven't actually run my program there.
+Note that the '.' in the second example is a symbol that means "the current directory." Also if I've messed up the Windows example let me know by filing an issue with an example of the corrected command line(s). I don't use Windows very much, and haven't actually run my program there.
