@@ -38,24 +38,15 @@ import java.util.Date;
  */
 public class BoardView extends javax.swing.JPanel {
 
-  private static final Dimension PREFERRED_SIZE = new Dimension(300, 300);
+  private static final Dimension PREFERRED_SIZE = new Dimension(500, 500);
 
   private Board theGame;
   private ImageMaker goImages = new ImageMaker();
-
-
-  /**
-   * Creates new form boardView
-   */
-  public BoardView() {
-    this.setSize(210, 210);
-  }
 
   /**
    * Creates new form boardView
    */
   BoardView(Board aBoard) {
-    this.setSize(210, 210);
     theGame = aBoard;
   }
 
@@ -66,7 +57,6 @@ public class BoardView extends javax.swing.JPanel {
     if (theGame == null) {
       return;
     }
-
 
     Container p = getParent();
     g.setColor(p.getBackground());
