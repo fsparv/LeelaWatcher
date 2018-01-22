@@ -32,23 +32,10 @@ public class SGFFileFilter extends javax.swing.filechooser.FileFilter {
   }
 
   public boolean accept(java.io.File file) {
-    String name = file.getName();
-    if ((name.indexOf(".sgf") == (name.length() - 4)) ||
-        (name.indexOf(".SGF") == (name.length() - 4)) ||
-        (name.indexOf(".Sgf") == (name.length() - 4)) ||
-        (name.indexOf(".sGf") == (name.length() - 4)) ||
-        (name.indexOf(".sgF") == (name.length() - 4)) ||
-        (name.indexOf(".sGF") == (name.length() - 4)) ||
-        (name.indexOf(".SgF") == (name.length() - 4)) ||
-        (name.indexOf(".SGf") == (name.length() - 4))) {
-      return true;
-    } else {
-      return false;
-    }
+    return file.getName().toUpperCase().endsWith(".SGF");
   }
 
   public String getDescription() {
     return "Smart Go Format";
   }
-
 }
