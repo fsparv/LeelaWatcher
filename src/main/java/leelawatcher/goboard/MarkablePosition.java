@@ -16,6 +16,7 @@
 package leelawatcher.goboard;
 
 import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -36,7 +37,9 @@ import java.util.HashSet;
  * @author Patrick G. Heck
  */
 public class MarkablePosition extends Position {
-  private int[] marks = new int[19];  // an array that marks up the position
+
+  // an array that marks up the position
+  private int[] marks = new int[19];
 
   /**
    * Instantiate a markable position based on a preexisting position object.
@@ -130,9 +133,9 @@ public class MarkablePosition extends Position {
    * <p>
    * <p><b>Please Note:</b><br>
    * This method clears all existing markers. Marks are used to indicate
-   * stones that have already been counted. Only ajacent stones are
+   * stones that have already been counted. Only adjacent stones are
    * members of a group and thus stones diagonal to a member stone are
-   * not counted as members of the same group unless they share an ajacent
+   * not counted as members of the same group unless they share an adjacent
    * stone. This is a universal minimal standard in all forms of Go, and
    * can thus be safely encoded here.
    *
@@ -143,12 +146,12 @@ public class MarkablePosition extends Position {
    * @param boardSize The size of the board
    * @return A HashSet of PointOfPlay objects describing the group
    */
-  public HashSet getGroupSet(PointOfPlay p, HashSet<PointOfPlay> members, int boardSize) {
+  public Set getGroupSet(PointOfPlay p, Set<PointOfPlay> members, int boardSize) {
     if (members == null) {
       members = new HashSet<>();
       clearMarks();                // NOTE that this clears all marks
-
     }
+
     if (isOnBoard(p, boardSize)) {
       setMark(p);
 
