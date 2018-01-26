@@ -156,36 +156,23 @@ public class MarkablePosition extends Position {
       setMark(p);
 
       if (stoneAt(p)) {
-        PointOfPlay dir;
         members.add(p);
-        dir = new PointOfPlay(p.getX(), p.getY() + 1);
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-        dir = new PointOfPlay(p.getX() + 1, p.getY());
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-        dir = new PointOfPlay(p.getX(), p.getY() - 1);
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-        dir = new PointOfPlay(p.getX() - 1, p.getY());
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-
+        checkNbr(p, p.getX(), p.getY() + 1, members, boardSize);
+        checkNbr(p, p.getX() + 1, p.getY(), members, boardSize);
+        checkNbr(p, p.getX(), p.getY() - 1, members, boardSize);
+        checkNbr(p, p.getX() - 1, p.getY(), members, boardSize);
       }
     }
     return members;
+  }
+
+  private void checkNbr(PointOfPlay p, int x, int y, Set<PointOfPlay> members, int boardSize) {
+    PointOfPlay dir = new PointOfPlay(x, y);
+    if (isOnBoard(dir, boardSize) && !isMarked(dir)
+            && ((blackAt(p) && blackAt(dir))
+            || (whiteAt(p) && whiteAt(dir)))) {
+      getGroupSet(dir, members, boardSize);
+    }
   }
 
 }
