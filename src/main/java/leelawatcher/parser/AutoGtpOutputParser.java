@@ -33,7 +33,7 @@ public class AutoGtpOutputParser {
    * 1. anything ending in 'set.'
    */
   private static final Pattern EVENT = Pattern.compile("^(.*set\\.|\\s*\\d+\\s\\((?:\\w\\s)?\\w+\\)\\s*|Game).*", Pattern.DOTALL);
-  private static final Pattern MOVE_EVENT = Pattern.compile("\\s*\\d+\\s*\\(((?:\\w\\s)?\\w+)\\)\\s*");
+  private static final Pattern MOVE_EVENT = Pattern.compile("\\s*\\d+\\s*\\((?:\\w\\s)?(\\w+)\\)\\s*");
     // (?:\\w\\s)? for both AutoGTPv11 outputs (B A1) (W F18) and AutoGTPv9 outputs (A1) (F18)
   private static final Pattern MOVE = Pattern.compile("(?:(.)(\\d+))|(pass)|(resign)");
   private BoardView boardView;
