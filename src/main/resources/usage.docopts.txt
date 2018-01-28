@@ -1,0 +1,12 @@
+Start a LeelaWatcher instance. A prefix of java -jar is presumed for all
+usage below. <dir> specifies where to find autogtp and <cmd> allows
+overide of default './autogtp' command (windows users need to specify
+an exe for example)
+
+Usage:
+ LeelaWatcher-1.2.0-SNAPSHOT.jar [--help] [options] <dir> [<cmd>]
+
+Options:
+  --no-sgf        Don't save an sgf file for each game
+  --board-only    Don't show output window and other diagnostic features.
+  --help -h       Print detailed help message

@@ -166,9 +166,7 @@ public class Position implements Cloneable {
 
     if (aMove.isMove())      // now add the new stone
     {
-      if (!aMove.isPass()) {
-        lastMove = new PointOfPlay(aMove.getX(), aMove.getY());
-      }
+      lastMove = new PointOfPlay(aMove.getX(), aMove.getY());
       if (aMove.getColor() == 'W') {
         blackToMove = true;
         if (!aMove.isPass()) {

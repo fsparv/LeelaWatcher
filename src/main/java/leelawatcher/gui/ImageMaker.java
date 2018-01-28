@@ -17,6 +17,7 @@
 package leelawatcher.gui;
 
 import leelawatcher.TsbConstants;
+import leelawatcher.goboard.Move;
 import leelawatcher.goboard.Position;
 import leelawatcher.goboard.PointOfPlay;
 
@@ -280,8 +281,9 @@ public class ImageMaker implements TsbConstants {
 
     // mark last move
     PointOfPlay lastMove = pos.getLastMove();
+
     float offsetFacor = ((lastPlayedDotScaledDownFactor/2)-1)/lastPlayedDotScaledDownFactor;
-    if (lastMove != null) {
+    if (lastMove != null && !Move.isPass(lastMove.getX(),lastMove.getY())) {
         BGraphs.setColor(pos.blackAt(lastMove.getX(), lastMove.getY()) ? Color.white : Color.black);
         BGraphs.fillOval(Math.round((lineSp / 2 + lastMove.getX() * lineSp)+stnSize*offsetFacor),
                          Math.round((lineSp / 2 + ((size - 1) - lastMove.getY()) * lineSp)+stnSize*offsetFacor),

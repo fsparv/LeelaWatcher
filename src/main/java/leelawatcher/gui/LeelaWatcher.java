@@ -15,8 +15,10 @@
  */
 package leelawatcher.gui;
 
+import com.google.common.io.Resources;
 import leelawatcher.goboard.Board;
 import leelawatcher.parser.AutoGtpOutputParser;
+import org.docopt.Docopt;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +27,9 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Objects;
 
 public class LeelaWatcher {
@@ -47,21 +52,18 @@ public class LeelaWatcher {
   }
 
   public static void main(String[] args) throws IOException {
-    for (String arg : args) {
-      System.out.println(arg);
+    URL usage = Resources.getResource("usage.docopts.txt");
+    String doc = Resources.toString(usage, Charset.forName("UTF-8"));
+    Docopt options = new Docopt(doc);
+    Map<String, Object> optMap = options.parse(args);
+
+    if (optMap.get("--no-sgf") != null) {
+      dontSaveGames = true;
+    }
+    if (optMap.get("--board-only") != null) {
+      hideOutputWindow = true;
     }
 
-    for (int i = 2; i < args.length; ++i) {
-      // parse all other command line arguments here
-      System.out.println("parsing arg " + args[i]);
-
-      if (args[i].equals("-nosgf")) {
-        dontSaveGames = true;
-      }
-      if (args[i].equals("-hideoutput")) {
-        hideOutputWindow = true;
-      }
-    }
 
     LeelaWatcher leelaWatcher = new LeelaWatcher();
     JFrame frame = new JFrame();
