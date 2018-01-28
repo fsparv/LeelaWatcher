@@ -98,6 +98,8 @@ public class Position implements Cloneable {
 
   private int moveNum; // to associate this Position with a move in the game.
 
+  private PointOfPlay lastMove;
+
   private boolean blackToMove;
   private int[] posBlack = new int[19];  // the Position of black stones
   private int[] posWhite = new int[19];  // the Position of white stones
@@ -164,6 +166,7 @@ public class Position implements Cloneable {
 
     if (aMove.isMove())      // now add the new stone
     {
+      lastMove = new PointOfPlay(aMove.getX(), aMove.getY());
       if (aMove.getColor() == 'W') {
         blackToMove = true;
         if (!aMove.isPass()) {
@@ -191,6 +194,10 @@ public class Position implements Cloneable {
       tmp[2].forEach(p -> posWhite[p.getY()] |= colMasks[p.getX()]);
 
     }
+  }
+
+  public PointOfPlay getLastMove() {
+    return lastMove;
   }
 
   public String toString() {
@@ -229,9 +236,9 @@ public class Position implements Cloneable {
     aPosBlack = other.getArrayBlack();
     aPosWhite = other.getArrayWhite();
 
-    //	dPrint();
+    //  dPrint();
 
-    //	tPos.dPrint();
+    //  tPos.dPrint();
 
     // stays 0 if equal
     tmp = IntStream.range(0, posBlack.length).map(i -> (posBlack[i] ^ aPosBlack[i])).sum();
@@ -351,11 +358,3 @@ public class Position implements Cloneable {
     System.out.println(tmp);
   }
 }
-
-
-
-
-
-
-
-

@@ -54,7 +54,6 @@ import java.util.List;
  * @author Patrick G. Heck
  * @version 0.1
  */
-
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Move
 
@@ -169,7 +168,6 @@ public class Move
    *
    * @param parentMove The move preceeding this one in the tree.
    */
-
   @SuppressWarnings("unused")
   public Move(Move parentMove) {
     numInstances++;        // keep track of how many have been created
@@ -220,7 +218,6 @@ public class Move
    *                                  <code>Move.MOVE_WHITE</code>
    * @throws IllegalArgumentException If pcolor is of the same color as the parent move
    */
-
   public Move(int xcoor, int ycoor, char pcolor, Move parentMove) {
     numInstances++;        // keep track of how many have been created
     numThis = numInstances;
@@ -264,7 +261,6 @@ public class Move
    * @return <code>true</code> if <code>color == Move.MOVE_SETUP</code> for
    * the calling object, <code>false</code> otherwise.
    */
-
   @SuppressWarnings("WeakerAccess")
   public boolean isSetup() {
     return (color == MOVE_SETUP);
@@ -276,7 +272,6 @@ public class Move
    * @return <code>true</code> if <code>color == Move.MOVE_ROOT</code> for
    * the calling object, <code>false</code> otherwise.
    */
-
   public boolean isRoot() {
     return (color == MOVE_ROOT);
   }
@@ -288,8 +283,6 @@ public class Move
    * <code>Move.MOVE_WHITE</code> or <code> Move.MOVE_BLACK</code>
    * for the calling object, <code>false</code> otherwise.
    */
-
-
   public boolean isMove() {
     return (color == MOVE_WHITE || color == MOVE_BLACK);
   }
@@ -300,7 +293,6 @@ public class Move
    * @return <code>true</code> if <code>color</code> is equal to
    * <code>Move.MOVE_WHITE</code>, <code>false</code> otherwise.
    */
-
   public boolean isWhite() {
     return (color == Move.MOVE_WHITE);
   }
@@ -311,7 +303,6 @@ public class Move
    * @return <code>true</code> if <code>color</code> is equal to
    * <code>Move.MOVE_WHITE</code>, <code>false</code> otherwise.
    */
-
   public boolean isBlack() {
     return (color == Move.MOVE_BLACK);
   }
@@ -322,9 +313,12 @@ public class Move
    * @return <code>true</code> if the move coordinates match
    * <code>Move.PASS</code>
    */
-
   public boolean isPass() {
     //System.out.println("(" + x + " == " + Move.PASS + ") && (" + y + " == " + Move.PASS + ")");
+    return isPass(x,y);
+  }
+
+  public static boolean isPass(int x, int y) {
     return ((x == Move.PASS) && (y == Move.PASS));
   }
 
@@ -346,7 +340,6 @@ public class Move
    *
    * @return A unique long integer for each <code>Move</code> object.
    */
-
   public long ID() {
     return numThis;
   }
@@ -398,7 +391,6 @@ public class Move
    * attached as children (leaves) to this node on the tree of
    * moves.
    */
-
   public int numChildren() {
     return children.size();
   }
@@ -415,7 +407,6 @@ public class Move
    * @param which A reference to the move to be removed from the
    *              <code>children</code> vector.
    */
-
   public void removeChild(Move which) {
     children.remove(which);
   }
@@ -433,7 +424,6 @@ public class Move
    * @param child A reference to the move to be added to the
    *              <code>children</code> vector.
    */
-
   public void addChild(Move child) {
     children.add(child);
   }
@@ -461,7 +451,6 @@ public class Move
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-
   public void setupEmpty(int x, int y) {
     setup(x, y, addEmpty, addWhite, addBlack);
   }
@@ -519,8 +508,6 @@ public class Move
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-
-
   public void setupWhite(int x, int y) {
     setup(x, y, addWhite, addEmpty, addBlack);
   }
@@ -549,7 +536,6 @@ public class Move
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-
   public void setupBlack(int x, int y) {
     setup(x, y, addBlack, addWhite, addEmpty);
   }
@@ -568,7 +554,6 @@ public class Move
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-
   public void undoSetupEmpty(int x, int y) {
     PointOfPlay temp = new PointOfPlay(x, y);
 
@@ -592,7 +577,6 @@ public class Move
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-
   public void undoSetupWhite(int x, int y) {
     PointOfPlay temp = new PointOfPlay(x, y);
 
@@ -617,7 +601,6 @@ public class Move
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-
   public void undoSetupBlack(int x, int y) {
     PointOfPlay temp = new PointOfPlay(x, y);
     Iterator points = addBlack.iterator();
@@ -646,7 +629,6 @@ public class Move
    * @return The vertical displacement from the lower left corner
    * as an <code>int</code>
    */
-
   public int yEnglish() {
     return (y + 1);
   }
@@ -668,7 +650,6 @@ public class Move
    * @return The vertical displacement from the lower left corner
    * as an <code>char</code>
    */
-
   public char xEnglish() {
     if (x >= 9)
       return (char) ('a' + x + 1); // This is a convention used in books.
@@ -693,7 +674,6 @@ public class Move
    * @return The horizontal displacement from the <b>upper</b> left
    * corner as a <code>char</code>
    */
-
   public char xSGF(int xNum) {
     return (xNum == Move.PASS) ? ' ' : (char) ('a' + xNum);
   }
@@ -712,7 +692,6 @@ public class Move
    * @return The vertical displacement from the <b>upper</b> left
    * corner as a <code>char</code>
    */
-
   public char ySGF(int yNum) {
     return (yNum == Move.PASS) ? ' ' : (char) ('a' + 18 - yNum); // SGF format a,a is upper left corner
   }
@@ -741,7 +720,6 @@ public class Move
    *
    * @return A string representing the move in SGF format.
    */
-
   public String toString() {
     StringBuilder temp = new StringBuilder();
 
@@ -810,7 +788,6 @@ public class Move
    * @return A reference to the next move in the move tree for
    * the requested variation.
    */
-
   public Move next(int variation) {
     if (variation >= 0 && variation <= children.size())
       return children.get(variation);
@@ -829,7 +806,6 @@ public class Move
    *
    * @return A reference to the parent move one level up the move tree.
    */
-
   public Move getParent() {
     return parent;
   }
@@ -846,7 +822,6 @@ public class Move
    *                  turn of play.
    * @throws UnsupportedOperationException When it is invoked on a "normal move"
    */
-
   public void setColorMoveNext(char nextColor) {
     if ((color == MOVE_SETUP) || (color == MOVE_ROOT)) {
       colorMoveNext = nextColor;
@@ -862,7 +837,6 @@ public class Move
    * @return Either </code>Move.MOVE_WHITE</code> or
    * </code>Move.MOVE_BLACK</code>.
    */
-
   public char getColorNextMove() {
     return colorMoveNext;
   }
@@ -880,7 +854,6 @@ public class Move
    *
    * @return The move number for this move.
    */
-
   public int getMoveNum() {
     return moveNum;
   }
@@ -892,7 +865,6 @@ public class Move
    *
    * @param aComment The comment about the move in string form.
    */
-
   public void setComment(String aComment) {
     comment = aComment;
   }
@@ -905,7 +877,6 @@ public class Move
    *
    * @return A string containing the comments for this move.
    */
-
   public String getComment() {
     return comment;
   }
@@ -915,7 +886,6 @@ public class Move
    *
    * @return The horizontal displacement from the lower left corner.
    */
-
   public int getX() {
     return x;
   }
@@ -925,7 +895,6 @@ public class Move
    *
    * @return The vertical displacement from the lower left corner.
    */
-
   public int getY() {
     return y;
   }
@@ -941,7 +910,6 @@ public class Move
    *
    * @return One of <code>MOVE_ROOT|MOVE_SETUP|MOVE_WHITE|MOVE_BLACK</code>
    */
-
   public char getColor() {
     return color;
   }

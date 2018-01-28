@@ -17,7 +17,9 @@
 package leelawatcher.gui;
 
 import leelawatcher.TsbConstants;
+import leelawatcher.goboard.Move;
 import leelawatcher.goboard.Position;
+import leelawatcher.goboard.PointOfPlay;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -30,6 +32,11 @@ import java.net.URL;
  * @author root
  */
 public class ImageMaker implements TsbConstants {
+
+  // drawing fine tuning
+  float lastPlayedDotScaledDownFactor = 6;
+  float shadowOffset = 0.12f;
+  Color shadowColor = new Color(0, 0, 0, 90);
 
   // Constants
 
@@ -88,7 +95,7 @@ public class ImageMaker implements TsbConstants {
 
   // paint a stone at a given coordinate specified in pixels
 
-  //  public void paintStone2D(int x, int y, Color player, 
+  //  public void paintStone2D(int x, int y, Color player,
   //                         int pixSize, Graphics2D G)
   //      {
   //          Ellipse2D.Float stone = new Ellipse2D.Float(x,y,pixSize,pixSize);
@@ -103,6 +110,12 @@ public class ImageMaker implements TsbConstants {
   public void paintStone(int x, int y, Color player,
                          int pixSize, Graphics g) {
     //System.out.println("by pixel"+x+","+y);
+
+    // draw shadow first
+    g.setColor(shadowColor);
+    g.fillOval(x+(int)(pixSize*shadowOffset), y+(int)(pixSize*shadowOffset), pixSize, pixSize);
+
+    // draw stone itself
     g.setColor(Color.black);
     g.fillOval(x, y, pixSize, pixSize);
     g.setColor(player);
@@ -257,22 +270,27 @@ public class ImageMaker implements TsbConstants {
 
     int stnSize = Math.round(lineSp - 1);
 
+    // render it top down  so shadows work correctly
     for (int x = 0; x < size; x++)
-      for (int y = 0; y < size; y++) {
-        if (pos.blackAt(x, y)) {
+      for (int y = size-1; y >= 0; --y)
+        if (pos.stoneAt(x, y))
           paintStone(Math.round((lineSp / 2 + x * lineSp)),
-              Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
-              Color.black, stnSize, BGraphs);
-          continue;
-        }
-        if (pos.whiteAt(x, y)) {
-          paintStone(Math.round((lineSp / 2 + x * lineSp)),
-              Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
-              Color.white, stnSize, BGraphs);
-        }
-      }
+                     Math.round((lineSp / 2 + ((size - 1) - y) * lineSp)),
+                     (pos.blackAt(x, y)) ? Color.black : Color.white,
+                     stnSize, BGraphs);
+
+    // mark last move
+    PointOfPlay lastMove = pos.getLastMove();
+
+    float offsetFacor = ((lastPlayedDotScaledDownFactor/2)-1)/lastPlayedDotScaledDownFactor;
+    if (lastMove != null && !Move.isPass(lastMove.getX(),lastMove.getY())) {
+        BGraphs.setColor(pos.blackAt(lastMove.getX(), lastMove.getY()) ? Color.white : Color.black);
+        BGraphs.fillOval(Math.round((lineSp / 2 + lastMove.getX() * lineSp)+stnSize*offsetFacor),
+                         Math.round((lineSp / 2 + ((size - 1) - lastMove.getY()) * lineSp)+stnSize*offsetFacor),
+                         stnSize/(int)(lastPlayedDotScaledDownFactor/2),
+                         stnSize/(int)(lastPlayedDotScaledDownFactor/2));
+    }
 
     return BoardImg;
   }
 }
-    

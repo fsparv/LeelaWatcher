@@ -21,7 +21,7 @@ mainClassName = 'leelawatcher.gui.LeelaWatcher'
 shadowJar {
     baseName = 'LeelaWatcher'
     classifier = null
-    version = '1.0.2'
+    version = '1.1.0-SNAPSHOT'
 }
 
 repositories {
@@ -29,5 +29,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.guava:guava:23.5-jre'
+    compile 'com.offbytwo:docopt:0.6.0.20150202'
     testCompile('junit:junit:4.12')
 }
