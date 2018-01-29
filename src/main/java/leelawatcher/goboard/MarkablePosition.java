@@ -157,16 +157,20 @@ public class MarkablePosition extends Position {
 
       if (stoneAt(p)) {
         members.add(p);
-        checkNbr(p, p.getX(), p.getY() + 1, members, boardSize);
-        checkNbr(p, p.getX() + 1, p.getY(), members, boardSize);
-        checkNbr(p, p.getX(), p.getY() - 1, members, boardSize);
-        checkNbr(p, p.getX() - 1, p.getY(), members, boardSize);
+        checkNeighbor(p, p.getX(), p.getY() + 1, members, boardSize);
+        checkNeighbor(p, p.getX() + 1, p.getY(), members, boardSize);
+        checkNeighbor(p, p.getX(), p.getY() - 1, members, boardSize);
+        checkNeighbor(p, p.getX() - 1, p.getY(), members, boardSize);
       }
     }
     return members;
   }
 
-  private void checkNbr(PointOfPlay p, int x, int y, Set<PointOfPlay> members, int boardSize) {
+    /**
+     * If the neighbor of p, specified by x, y coordinates is the same color, on the board,
+     * and not marked, then continue searching for the group set from the neighbor.
+     */
+  private void checkNeighbor(PointOfPlay p, int x, int y, Set<PointOfPlay> members, int boardSize) {
     PointOfPlay dir = new PointOfPlay(x, y);
     if (isOnBoard(dir, boardSize) && !isMarked(dir)
             && ((blackAt(p) && blackAt(dir))

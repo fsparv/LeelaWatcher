@@ -42,7 +42,6 @@ public class MarkablePositionTest {
         MarkablePosition pos = new MarkablePosition(new Position());
         PointOfPlay p1 = new PointOfPlay(2, 3);
         pos.setMark(p1);
-        pos.setMark(p1);
         assertTrue(pos.isMarked(p1));
         pos.clearMark(p1);
         assertFalse(pos.isMarked(p1));
@@ -53,7 +52,6 @@ public class MarkablePositionTest {
         MarkablePosition pos = new MarkablePosition(new Position());
         PointOfPlay p1 = new PointOfPlay(2, 2);
         PointOfPlay p2 = new PointOfPlay(2, 3);
-        pos.setMark(p1);
         pos.setMark(p1);
         pos.setMark(p2);
         assertTrue(pos.isMarked(p1));
