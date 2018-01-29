@@ -57,10 +57,10 @@ public class LeelaWatcher {
     Docopt options = new Docopt(doc);
     Map<String, Object> optMap = options.parse(args);
 
-    if (optMap.get("--no-sgf") != null) {
+    if ((boolean) optMap.get("--no-sgf")) {
       dontSaveGames = true;
     }
-    if (optMap.get("--board-only") != null) {
+    if ((boolean) optMap.get("--board-only")) {
       hideOutputWindow = true;
     }
 
