@@ -90,13 +90,16 @@ public class LeelaWatcher {
     SwingUtilities.invokeLater(() -> {
         try {
           //noinspection SpellCheckingInspection
-          String cmd = "./autogtp";
-          if (args.length > 1) {
-            cmd = args[1];
-            System.out.println("cmd is " + cmd);
+          String cmd;
+          Object cmdObj = optMap.get("<cmd>");
+          if (cmdObj != null) {
+            cmd = String.valueOf(cmdObj);
+          } else {
+            cmd = "./autogtp";
           }
+          System.out.println("cmd is " + cmd);
           ProcessBuilder pb = new ProcessBuilder(cmd);
-          pb.directory(new File(args[0]));
+          pb.directory(new File(String.valueOf( optMap.get("<dir>"))));
           pb.redirectErrorStream(true);
           proc = pb.start();
           leelaWatcher.parser = new AutoGtpOutputParser(leelaWatcher.boardView);

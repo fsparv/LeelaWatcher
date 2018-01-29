@@ -4,7 +4,7 @@ overide of default './autogtp' command (windows users need to specify
 an exe for example)
 
 Usage:
- LeelaWatcher-1.2.0-SNAPSHOT.jar [--help] [options] <dir> [<cmd>]
+ LeelaWatcher-1.1.0-SNAPSHOT.jar [--help] [options] <dir> [<cmd>]
 
 Options:
   --no-sgf        Don't save an sgf file for each game
