@@ -17,7 +17,7 @@ After you have Java, Leela Zero and autogtp, you can run the latest version of L
 
 On Linux (what I use) the command looks like this
 
-    java -jar LeelaWatcher-1.0.1.jar /home/gus/leelaz/leela-zero/autogtp/
+    java -jar LeelaWatcher-1.1.0.jar /home/gus/leelaz/leela-zero/autogtp/
     
 Mac should be similar. For those not familiar with java, what that line does is it invokes java and instructs it to run the code found in LeelaWatcher.jar. Everything after LeelaWatcher.jar is passed to the program as [arguments](https://en.wikipedia.org/wiki/Command-line_interface#Arguments)
 
@@ -25,11 +25,28 @@ Two arguments are possible, the first one is the location where LeelaWatcher wil
 
 Here's a Windows example, that assumes that your autogtp is in a folder named `D:\My Folders\Downloads\leela-zero-0.4-window` :
 
-    C:>java -jar LeelaWatcher-1.0.1.jar D:\My Folders\Downloads\leela-zero-0.4-windows autogtp.exe
+    C:>java -jar LeelaWatcher-1.1.0.jar D:\My Folders\Downloads\leela-zero-0.4-windows autogtp.exe
 
 or alternately 
 
     C:> cd D:\My Folders\Downloads\leela-zero-0.4-windows
-    D:\My Folders\Downloads\leela-zero-0.4-windows>java -jar LeelaWatcher-1.0.1.jar . autogtp.exe
+    D:\My Folders\Downloads\leela-zero-0.4-windows>java -jar LeelaWatcher-1.1.0.jar . autogtp.exe
     
 Note that the '.' in the second example is a symbol that means "the current directory." Also if I've messed up the Windows example let me know by filing an issue with an example of the corrected command line(s). I don't use Windows very much, and haven't actually run my program there.
+
+Additional command line options can be seen by passing `--help` or `-h`
+
+    java -jar ~/projects/LeelaWatcher/LeelaWatcher/build/libs/LeelaWatcher-1.1.0.jar --help 
+    
+    Start a LeelaWatcher instance. A prefix of java -jar is presumed for all
+    usage below. <dir> specifies where to find autogtp and <cmd> allows
+    overide of default './autogtp' command (windows users need to specify
+    an exe for example)
+    
+    Usage:
+     LeelaWatcher-1.1.0-SNAPSHOT.jar [--help] [options] <dir> [<cmd>]
+    
+    Options:
+      --no-sgf        Don't save an sgf file for each game
+      --board-only    Don't show output window and other diagnostic features.
+      --help -h       Print detailed help message
