@@ -380,7 +380,7 @@ public class Board {
    */
   @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
   public int captureGroup(PointOfPlay p) {
-    HashSet groupList = enumerateGroup(p);
+    Set groupList = enumerateGroup(p);
     int result = groupList.size();
 
     for (Object aGroupList : groupList) {
@@ -404,7 +404,7 @@ public class Board {
    * @see MarkablePosition#getGroupSet
    */
 
-  private HashSet enumerateGroup(PointOfPlay p) {
+  private Set enumerateGroup(PointOfPlay p) {
     return getGroupSet(p);
   }
 
@@ -415,10 +415,10 @@ public class Board {
    *
    * @param p A point specifying a stone that is a member of the
    *          group in question.
-   * @see MarkablePosition#getGroupSet(PointOfPlay, HashSet, int)
+   * @see MarkablePosition#getGroupSet(PointOfPlay, Set, int)
    */
 
-  private HashSet getGroupSet(PointOfPlay p) {
+  private Set getGroupSet(PointOfPlay p) {
     MarkablePosition temp = new MarkablePosition(getCurrPos());
     return temp.getGroupSet(p, null, getBoardSize());
   }

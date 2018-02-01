@@ -16,37 +16,36 @@
 package leelawatcher.goboard;
 
 import java.util.HashSet;
+import java.util.Set;
 
 
 /**
  * This class adds markup features to a position.
  * <p>
- * <p>Mark up features are suported by an array of bitfields miroring those
+ * <p>Mark up features are supported by an array of bitfields mirroring those
  * used in the parent class. This class is useful for marking locations
- * already visited, evaluated  or counted by a routine that traverses groups
- * or scans a postion multiple times.
+ * already visited, evaluated, or counted by a routine that traverses groups
+ * or scans a position multiple times.
  * <p>
  * <p><b>PLEASE NOTE:</b><br>
  * MarkablePosition objects inherit the equals() method from the parent
- * class unmodified, and thus two MakablePositions can be equal even if the
+ * class unmodified, and thus two MarkablePositions can be equal even if the
  * values in the markup fields differ. This is subject to change however, so
  * storing Positions and MarkablePositions mixed in the same utility class is
- * strongly reccomended against.
+ * strongly discouraged.
  *
  * @author Patrick G. Heck
- * @version $Revision$
  */
-
-@SuppressWarnings("unused")
 public class MarkablePosition extends Position {
-  private int[] _marks = new int[19];  // an array that marks up the position
+
+  // an array that marks up the position
+  private int[] marks = new int[19];
 
   /**
    * Instantiate a markable position based on a preexisting position object.
    *
    * @param p A position on which to base this instance.
    */
-
   public MarkablePosition(Position p) {
     super(p);
     clearMarks();
@@ -57,10 +56,9 @@ public class MarkablePosition extends Position {
    * <p>
    * All mark up bits are set to 0 completely erasing all marks.
    */
-
   public void clearMarks() {
-    for (int i = 0; i < _marks.length; i++) {
-      _marks[i] = 0;
+    for (int i = 0; i < marks.length; i++) {
+      marks[i] = 0;
     }
   }
 
@@ -73,9 +71,8 @@ public class MarkablePosition extends Position {
    * @param p The point to be tested
    * @return True if a mark has been set false otherwise
    */
-
   public boolean isMarked(PointOfPlay p) {
-    return ((_marks[p.getY()] & colMasks[p.getX()]) > 0);
+    return ((marks[p.getY()] & colMasks[p.getX()]) > 0);
   }
 
   /**
@@ -86,10 +83,9 @@ public class MarkablePosition extends Position {
    *
    * @param p The point to be marked.
    */
-
   public void setMark(PointOfPlay p) {
     if (!isMarked(p)) {
-      _marks[p.getY()] += colMasks[p.getX()];
+      marks[p.getY()] += colMasks[p.getX()];
     }
   }
 
@@ -101,10 +97,9 @@ public class MarkablePosition extends Position {
    *
    * @param p The point to be unmarked.
    */
-
   public void clearMark(PointOfPlay p) {
     if (isMarked(p)) {
-      _marks[p.getY()] ^= colMasks[p.getX()];
+      marks[p.getY()] ^= colMasks[p.getX()];
     }
   }
 
@@ -118,12 +113,10 @@ public class MarkablePosition extends Position {
    * @param boardSize The size of the board we are verifying against.
    * @return True if the point is on the board false otherwise.
    */
-
   private boolean isOnBoard(PointOfPlay p, int boardSize) {
     return ((p.getX() < boardSize) && (p.getX() >= 0)
         && (p.getY() < boardSize) && (p.getY() >= 0));
   }
-
 
   /**
    * Generate a HashSet describing a group of stones.
@@ -140,9 +133,9 @@ public class MarkablePosition extends Position {
    * <p>
    * <p><b>Please Note:</b><br>
    * This method clears all existing markers. Marks are used to indicate
-   * stones that have already been counted. Only ajacent stones are
+   * stones that have already been counted. Only adjacent stones are
    * members of a group and thus stones diagonal to a member stone are
-   * not counted as members of the same group unless they share an ajacent
+   * not counted as members of the same group unless they share an adjacent
    * stone. This is a universal minimal standard in all forms of Go, and
    * can thus be safely encoded here.
    *
@@ -153,67 +146,37 @@ public class MarkablePosition extends Position {
    * @param boardSize The size of the board
    * @return A HashSet of PointOfPlay objects describing the group
    */
-
-  public HashSet getGroupSet(PointOfPlay p, HashSet<PointOfPlay> members, int boardSize) {
+  public Set getGroupSet(PointOfPlay p, Set<PointOfPlay> members, int boardSize) {
     if (members == null) {
       members = new HashSet<>();
       clearMarks();                // NOTE that this clears all marks
-
     }
+
     if (isOnBoard(p, boardSize)) {
       setMark(p);
 
       if (stoneAt(p)) {
-        PointOfPlay dir;
         members.add(p);
-        dir = new PointOfPlay(p.getX(), p.getY() + 1);
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-        dir = new PointOfPlay(p.getX() + 1, p.getY());
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-        dir = new PointOfPlay(p.getX(), p.getY() - 1);
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-        dir = new PointOfPlay(p.getX() - 1, p.getY());
-        if (isOnBoard(dir, boardSize) && !isMarked(dir)
-            && ((blackAt(p) && blackAt(dir))
-            || (whiteAt(p) && whiteAt(dir)))) {
-          getGroupSet(dir, members, boardSize);
-        }
-
+        checkNeighbor(p, p.getX(), p.getY() + 1, members, boardSize);
+        checkNeighbor(p, p.getX() + 1, p.getY(), members, boardSize);
+        checkNeighbor(p, p.getX(), p.getY() - 1, members, boardSize);
+        checkNeighbor(p, p.getX() - 1, p.getY(), members, boardSize);
       }
     }
     return members;
   }
 
-}
+    /**
+     * If the neighbor of p, specified by x, y coordinates is the same color, on the board,
+     * and not marked, then continue searching for the group set from the neighbor.
+     */
+  private void checkNeighbor(PointOfPlay p, int x, int y, Set<PointOfPlay> members, int boardSize) {
+    PointOfPlay dir = new PointOfPlay(x, y);
+    if (isOnBoard(dir, boardSize) && !isMarked(dir)
+            && ((blackAt(p) && blackAt(dir))
+            || (whiteAt(p) && whiteAt(dir)))) {
+      getGroupSet(dir, members, boardSize);
+    }
+  }
 
-/*
- * $Log$
- * Revision 1.3  2003/10/10 00:41:17  gus
- * updating the name of the position class
- *
- * Revision 1.2  2003/07/19 02:50:05  gus
- * New License based on the Apache License, Yeah open source :)
- *
- * Revision 1.1.1.1  2002/12/15 07:02:56  gus
- * Initial import into cvs server running on Aptiva
- *
- * Revision 1.3  2002/03/14 02:59:54  togo
- * Fixed some javadoc typos
- *
- * Revision 1.2  2002/03/14 02:50:09  togo
- * Added standard Variable naming scheme, and full javadoc
- *
- *
- */
+}
