@@ -1,16 +1,19 @@
 #!/bin/bash
 scriptPath=$(pwd)
 pathToRealAutoGTP=~/git/leela-zero/autogtp
+pipe=$scriptPath/$(od -A n -t x -N 4 /dev/urandom | tr -d [:space:]).tmpPipe
 
-#make pipes if nonexistent
-if ! [ -e $scriptPath/pipe_from_autogtp ] ; then
-  mkfifo $scriptPath/pipe_from_autogtp
-fi
+#make pipe which does not clash with other instances of LeelaWatcher
+while [ -e $pipe ]
+do
+  pipe=$scriptPath/$(od -A n -t x -N 4 /dev/urandom | tr -d [:space:]).tmpPipe
+done
+mkfifo $pipe
 
 #fork and disown process so it will survive longer than this process
 cd $pathToRealAutoGTP
-$scriptPath/waitToSendQ.sh $$ | $pathToRealAutoGTP/autogtp $@ >$scriptPath/pipe_from_autogtp & disown
+$scriptPath/waitToSendQ.sh $$ $pipe | $pathToRealAutoGTP/autogtp $@ >$pipe & disown
 
 #forward output
-cat $scriptPath/pipe_from_autogtp </dev/null
+cat $pipe </dev/null
 

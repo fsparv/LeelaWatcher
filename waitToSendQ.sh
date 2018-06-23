@@ -11,3 +11,6 @@ echo -e "q\n"
 
 #kill off process cat children
 kill -9 $1
+
+#remove temporary pipe
+rm $2
