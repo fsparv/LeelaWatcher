@@ -1,0 +1,16 @@
+#!/bin/bash
+scriptPath=$(pwd)
+pathToRealAutoGTP=~/git/leela-zero/autogtp
+
+#make pipes if nonexistent
+if ! [ -e $scriptPath/pipe_from_autogtp ] ; then
+  mkfifo $scriptPath/pipe_from_autogtp
+fi
+
+#fork and disown process so it will survive longer than this process
+cd $pathToRealAutoGTP
+$scriptPath/waitToSendQ.sh $$ | $pathToRealAutoGTP/autogtp $@ >$scriptPath/pipe_from_autogtp & disown
+
+#forward output
+cat $scriptPath/pipe_from_autogtp </dev/null
+
