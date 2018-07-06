@@ -12,7 +12,7 @@ mkfifo $pipe
 
 #fork and disown process so it will survive longer than this process
 cd $pathToRealAutoGTP
-$scriptPath/waitToSendQ.sh $$ $pipe | nice -n 42 $pathToRealAutoGTP/autogtp $@ >$pipe & disown
+$scriptPath/waitToSendQ.sh $$ $pipe | nice -n 42 $pathToRealAutoGTP/autogtp -w $@ >$pipe & disown
 
 #forward output
 cat $pipe </dev/null

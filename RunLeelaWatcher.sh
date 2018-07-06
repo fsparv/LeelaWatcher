@@ -1,3 +1,3 @@
 #!/bin/bash
-java -jar ./LeelaWatcher-1.1.0.jar ./
+java -jar build/libs/LeelaWatcher-1.1.0.jar --board-only ./
 
