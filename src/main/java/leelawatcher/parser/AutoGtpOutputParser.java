@@ -28,15 +28,21 @@ import java.util.regex.Pattern;
 
 public class AutoGtpOutputParser {
 
-  /*
-   * This pattern is meant to report a match for one of 3 groups:
-   * 1. anything ending in 'set.'
+  /**
    * (?:[BW]\\s)? is added so that both AutoGTPv11 outputs (B A1) (W F18) and AutoGTPv9 outputs (A1) (F18) will work.
    */
+  private static final String MOVE_PATTERN = "\\s*\\d+\\s*\\((?:[BW]\\s)?(\\w+)\\)\\s*";
+  /*
+   * This pattern is meant to report a match for one of 3 groups:
+   * 1. Anything ending in 'set.' or 'sent.'
+   *    'set. was used prior to v18, but somewhere around v18 the initial text ended with 'sent.'
+   * 2. A game move
+   * 3. "Game"
+   */
   private static final Pattern EVENT =
-          Pattern.compile("^(.*set\\.|\\s*\\d+\\s\\((?:[BW]\\s)?(\\w+)\\)\\s*|Game).*", Pattern.DOTALL);
+          Pattern.compile("^(.*sent\\.|.*set\\.|" + MOVE_PATTERN + "|Game).*", Pattern.DOTALL);
   private static final Pattern MOVE_EVENT =
-          Pattern.compile("\\s*\\d+\\s*\\((?:[BW]\\s)?(\\w+)\\)\\s*");
+          Pattern.compile(MOVE_PATTERN);
 
   private static final Pattern MOVE = Pattern.compile("(?:(.)(\\d+))|(pass)|(resign)");
   private BoardView boardView;
@@ -98,6 +104,7 @@ public class AutoGtpOutputParser {
             // we got something other than a move, therefore the game is over
             // setting this to false causes the game to be saved to disk.
             setInProgress(false);
+            System.out.println("got something other than a move: \n" + event);
           }
         }
       } catch (IllegalMoveException e) {
