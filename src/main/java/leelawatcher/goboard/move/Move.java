@@ -14,7 +14,9 @@
     limitations under the License.
  */
 
-package leelawatcher.goboard;
+package leelawatcher.goboard.move;
+
+import leelawatcher.goboard.PointOfPlay;
 
 import java.util.ArrayList;
 import java.util.Collections;

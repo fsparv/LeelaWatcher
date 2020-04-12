@@ -17,6 +17,7 @@
 package leelawatcher.scorer;
 
 import leelawatcher.goboard.*;
+import leelawatcher.goboard.move.Move;
 
 import java.util.Iterator;
 

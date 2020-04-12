@@ -17,7 +17,7 @@
 package leelawatcher.gui;
 
 import leelawatcher.TsbConstants;
-import leelawatcher.goboard.Move;
+import leelawatcher.goboard.move.Move;
 import leelawatcher.goboard.Position;
 import leelawatcher.goboard.PointOfPlay;
 

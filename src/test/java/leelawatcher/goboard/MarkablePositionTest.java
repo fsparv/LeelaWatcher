@@ -1,5 +1,6 @@
 package leelawatcher.goboard;
 
+import leelawatcher.goboard.move.Move;
 import org.junit.Test;
 
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static leelawatcher.goboard.Move.*;
+import static leelawatcher.goboard.move.Move.*;
 
 
 /**

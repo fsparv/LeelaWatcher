@@ -16,6 +16,7 @@
 
 package leelawatcher.goboard;
 
+import leelawatcher.goboard.move.Move;
 import leelawatcher.scorer.AbstractRules;
 import leelawatcher.scorer.QuickRules;
 import leelawatcher.scorer.Rules;
@@ -433,11 +434,11 @@ public class Board {
    *                    false if white should move first.
    */
   public void setUp(List<PointOfPlay> white, List<PointOfPlay> black, List<PointOfPlay> empty, boolean blackToMove) {
-    Move initalMove = this.gm.getCurrMove();
+    Move initialMove = this.gm.getCurrMove();
     white.forEach(p -> this.gm.doSetup(Move.MOVE_WHITE, p.getX(), p.getY(), blackToMove));
     black.forEach(p -> this.gm.doSetup(Move.MOVE_BLACK, p.getX(), p.getY(), blackToMove));
     empty.forEach(p -> this.gm.doSetup(Move.EMPTY, p.getX(), p.getY(), blackToMove));
-    if (initalMove == this.gm.getCurrMove()) {
+    if (initialMove == this.gm.getCurrMove()) {
       // was already a setup move to which we added points, need to recreate the existing position.
       positions.remove(currPos);
       positions.add(new Position(positions.get(currPos), this.gm.getCurrMove()));

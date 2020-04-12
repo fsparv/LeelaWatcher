@@ -17,6 +17,7 @@
 package leelawatcher.goboard;
 
 
+import leelawatcher.goboard.move.Move;
 import leelawatcher.sgf.SGFbuilder;
 
 import java.time.format.DateTimeFormatter;

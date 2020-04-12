@@ -2,7 +2,7 @@ package leelawatcher.scorer;
 
 import leelawatcher.goboard.Board;
 import leelawatcher.goboard.IllegalMoveException;
-import leelawatcher.goboard.Move;
+import leelawatcher.goboard.move.Move;
 import leelawatcher.goboard.PointOfPlay;
 import org.junit.Test;
 
