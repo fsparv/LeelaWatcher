@@ -17,11 +17,20 @@
 package leelawatcher.gui;
 
 import leelawatcher.TsbConstants;
-import leelawatcher.goboard.move.Move;
-import leelawatcher.goboard.Position;
 import leelawatcher.goboard.PointOfPlay;
+import leelawatcher.goboard.Position;
+import leelawatcher.goboard.move.AbstractMoveNode;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.TexturePaint;
+import java.awt.Toolkit;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
@@ -271,7 +280,7 @@ public class ImageMaker implements TsbConstants {
     PointOfPlay lastMove = pos.getLastMove();
 
     float offsetFacor = ((lastPlayedDotScaledDownFactor/2)-1)/lastPlayedDotScaledDownFactor;
-    if (lastMove != null && !Move.isPass(lastMove.getX(),lastMove.getY())) {
+    if (lastMove != null && !AbstractMoveNode.isPass(lastMove.getX(),lastMove.getY())) {
         BGraphs.setColor(pos.blackAt(lastMove.getX(), lastMove.getY()) ? Color.white : Color.black);
         BGraphs.fillOval(Math.round((lineSp / 2 + lastMove.getX() * lineSp)+stnSize*offsetFacor),
                          Math.round((lineSp / 2 + ((size - 1) - lastMove.getY()) * lineSp)+stnSize*offsetFacor),

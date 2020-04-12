@@ -18,6 +18,9 @@ package leelawatcher.goboard;
 
 
 import leelawatcher.goboard.move.Move;
+import leelawatcher.goboard.move.MoveNode;
+import leelawatcher.goboard.move.RootNode;
+import leelawatcher.goboard.move.SetupNode;
 import leelawatcher.sgf.SGFbuilder;
 
 import java.time.format.DateTimeFormatter;
@@ -131,7 +134,7 @@ public class Game {
 
     _ruleSet = "Japanese";            // default probably will be japaneese
     tradHandi = true;               // traditions are defaults
-    _gameRoot = new Move();     // a white pass to root the game tree
+    _gameRoot = new RootNode();     // a white pass to root the game tree
     gameOver = false;               // we have only just begun!
     whiteLast = true;               // this makes it black's move
     currMove = _gameRoot;
@@ -196,7 +199,7 @@ public class Game {
       }
     }
 
-    currMove = new Move(xcoor, ycoor, stoneColor, prevMove);
+    currMove = new MoveNode(xcoor, ycoor, stoneColor, prevMove);
 
     whiteLast = !whiteLast;
 
@@ -206,7 +209,7 @@ public class Game {
 
   public void doSetup(char type, int xcoor, int ycoor, boolean blackToMove) {
     if (!currMove.isSetup()) {
-      currMove = new Move(prevMove);
+      currMove = new SetupNode(prevMove);
     }
     switch (type) {
       case Move.EMPTY      : currMove.setupEmpty(xcoor,ycoor); break;

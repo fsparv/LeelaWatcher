@@ -18,242 +18,40 @@ package leelawatcher.goboard.move;
 
 import leelawatcher.goboard.PointOfPlay;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-/**
- * This class will be used to model a tree of Moves.
- * <p>
- * The branches of the tree represent variations, or moves undone. The
- * tree may have any number of leaves at each node. Tree traversal is
- * not included as a method. The order of the nodes is based entirely on
- * order of entry since there is no sensible way to sort Moves.
- * <p>
- * <p>Setup nodes occur within the tree and any Move related information stored
- * in a node containing setup information should be ignored. Setup nodes
- * should not add to the MoveNum variable as a setup does not constitute a
- * Move. Setups in the middle of the tree are allowed in order to support
- * the SGF file format.
- * <p>
- * <p><b><i>This class is due for a refactoring</i></b>, it does too much. It
- * should be divided into a MoveNode, a SetupNode and a RootNode which inherit
- * from an AbstractNode. This will also bring the object model in closer
- * correspondence with the structure of an SGF file.
- * <p>
- * <p>There will also be a need to write a GameInfo class and provide a place
- * to attach it to the first distinguishing move in a tree of games beginning
- * with the move sequence. This will not be necessary until either loading of
- * ANY SGF file is supported, or creation of multi-game trees is supported.
- * <p>
- * <p> It is important to note that while some methods here will work for
- * board sizes over or under 19x19 <b>only 19x19 is fully supported</b> by all
- * the methods in this class at this time. Some Functionality may need to be
- * swapped out to other classes (particularly in the realm of generating
- * SGF output) to support other board sizes.
- *
- * @author Patrick G. Heck
- * @version 0.1
- */
-@SuppressWarnings({"WeakerAccess", "unused"})
-public class Move {
+
+public interface Move {
+
   /**
    * <code>MOVE_WHITE</code> is the character that should be used to
    * designate a white move throughout the application.
    */
-  public final static char MOVE_WHITE = 'W';
+  char MOVE_WHITE = 'W';
 
   /**
    * <code>MOVE_BLACK</code> is the character that should be used to
    * designate a black move throughout the application.
    */
-  public final static char MOVE_BLACK = 'B';
-  public static final char EMPTY = 'E';
+  char MOVE_BLACK = 'B';
+  char EMPTY = 'E';
 
   /**
    * <code>MOVE_ROOT</code> is the character that should be used to
    * designate the root node of any tree of moves.
    */
-  private final static char MOVE_ROOT = 'R';
+  char MOVE_ROOT = 'R';
 
   /**
    * <code>MOVE_SETUP</code> is the character that should be used to
    * designate a setup move within any tree of moves.
    */
-  private final static char MOVE_SETUP = 'S';
+  char MOVE_SETUP = 'S';
 
   /**
    * The coordinate value that indicates a pass.
    */
-  public static final int PASS = 99;
-
-  /**
-   * The value representing a setup move.
-   */
-  @SuppressWarnings("unused")
-  public static final int SETUP = 98;
-
-
-  /**
-   * The maximum supported board size.
-   */
-  @SuppressWarnings("unused")
-  public static final int MAX_SIZE = 19;
-
-  private int x;                // horizontal coordinate 0-18
-  private int y;                // vertical coordinate 0-18
-  private char color;           // 'B' or 'W'
-  private int moveNum;          // depth into the tree
-  private Move parent;          // Move that came before
-  private List<Move> children;      // Moves that come after
-  private String comment;       // Where people demonstrate their (lack of?)
-  //    knowledge
-  private char colorMoveNext;   // who gets to place the next stone (B||W)
-
-  private List<PointOfPlay> addBlack;      // vectors to store PointOfPlay objects
-  private List<PointOfPlay> addWhite;      // in setup nodes.
-  private List<PointOfPlay> addEmpty;
-
-  // to help keep track of objects, and debug problems, all objects number
-  // their instances.
-
-  private static long numInstances = 0;
-  private long numThis;
-
-  /**
-   * Constructor to create the root of a game tree.
-   * <p>
-   * Only should be used for root nodes. The color will be set to MOVE_ROOT
-   * and this node is it's own parent. A root move can contain setup Info,
-   * usually handicap placement
-   */
-  public Move() {
-
-    numInstances++;        // keep track of how many have been created
-    numThis = numInstances;
-
-
-    x = 99;              // since this is the root, no stone is placed
-    y = 99;              // making it a pass
-
-    color = MOVE_ROOT;   // mark it as a root node (colorless)
-
-    moveNum = 0;         // This is the root Move, not a real Move
-
-    parent = this;       // This is the root Move and thus it's own parent
-
-    children = new ArrayList<>(1);
-
-    addBlack = new ArrayList<>(10);         // Handicaps most often
-    addWhite = new ArrayList<>(10);         // For setup of white stones
-    addEmpty = new ArrayList<>(10);         // For erasure of stones
-
-    comment = "";
-  }
-
-  /**
-   * Constructor to use for setup Moves.
-   * <p>
-   * Generally a setup move will most commonly occur right after the
-   * root move to place handicap stones if they havnt been placed in
-   * the root move. It is not legal to add setup information to a
-   * standard move and move information cannot be added to a setup move.
-   * This restriction is neccesary for compliance with the SGF format.
-   * Setup moves are otherwise allowed anywhere in the game tree, but
-   * they are usually only useful for sgf files that describe problem sets,
-   * or are annotated with alternate positions. Setup information must be
-   * added after the move is created using Move.setupEmpty, Move.setupBlack
-   * or Move.setupWhite methods.
-   *
-   * @param parentMove The move preceeding this one in the tree.
-   */
-  @SuppressWarnings("unused")
-  public Move(Move parentMove) {
-    numInstances++;        // keep track of how many have been created
-    numThis = numInstances;
-
-    // On a standard 19x19 board:
-    x = 98;                // 0-18 0 on left -1 to resign 19+ to pass
-    y = 98;                // 0-18 0 on botom -1 to resign 19+ to pass
-
-    color = MOVE_SETUP;    // 'S' indicates setup Move
-
-    colorMoveNext = parentMove.colorMoveNext;
-
-    moveNum = parentMove.getMoveNum();    // find out who is before us
-    // but don't increment
-
-    parent = parentMove;                  // Supprised?
-    parentMove.addChild(this);            // inform Parent of new child
-
-    children = new ArrayList<>(1);           // A place to put it's children
-
-    addBlack = new ArrayList<>(10);         // Handicaps most often
-    addWhite = new ArrayList<>(10);         // For setup of white stones
-    addEmpty = new ArrayList<>(10);         // For erasure of stones
-
-    comment = "";
-
-  }
-
-  /**
-   * Constructor to use for normal Moves.
-   * <p>
-   * This constructor creates a "normal" move by adding it to
-   * <code>parentMove</code>, setting the x and y coordinates and
-   * setting the color. It is not legal to try to attach a black move
-   * to a black parent move, or a white move to a white parent move,
-   * and only black and white moves may be created with this constructor
-   * (no setup or root nodes). In the future, this constructor may set
-   * the vectors for setup moves to null since they shouldn't be used
-   * on an object created with this constructor.
-   *
-   * @param xcoor      The horizontal displacement from the lower left corner
-   * @param ycoor      The vertical displacement from the lower left corner
-   * @param pcolor     The color for this move.
-   * @param parentMove The move to which this move is attached in the game
-   *                   tree.
-   * @throws IllegalArgumentException If pcolor is not <code>Move.MOVE_BLACK</code> or
-   *                                  <code>Move.MOVE_WHITE</code>
-   * @throws IllegalArgumentException If pcolor is of the same color as the parent move
-   */
-  public Move(int xcoor, int ycoor, char pcolor, Move parentMove) {
-    numInstances++;        // keep track of how many have been created
-    numThis = numInstances;
-
-    // On a standard 19x19 board:
-    x = xcoor;             // 0-18 0 on left -1 to resign 19 to pass
-    y = ycoor;             // 0-18 0 on bottom -1 to resign 19 to pass
-
-    if (pcolor != MOVE_BLACK && pcolor != MOVE_WHITE) {
-      String msg = "Moves must be black or white!";
-      throw new IllegalArgumentException(msg);
-    }
-
-    if (parentMove.isMove() && (pcolor == parentMove.color)) {
-      String msg = "Attempted to move the same color twice!";
-      throw new IllegalArgumentException(msg);
-    }
-
-    color = pcolor;        // 'B' or 'W'
-
-    moveNum = parentMove.getMoveNum();    // find out who is before us
-    moveNum++;                            // we are one more move into tree
-
-    parent = parentMove;                  // Suprised?
-
-    parentMove.addChild(this);            // inform Parent of new child
-
-    children = new ArrayList<>(1);           // A place to put it's children
-
-    addBlack = new ArrayList<>(1);         // shouldn't be used in move
-    addWhite = new ArrayList<>(1);         // node, and may be set to null
-    addEmpty = new ArrayList<>(1);         // in future versions
-
-    comment = "";
-
-  }
+  int PASS = 99;
 
   /**
    * Tests a move to see if it is a setup move.
@@ -261,10 +59,7 @@ public class Move {
    * @return <code>true</code> if <code>color == Move.MOVE_SETUP</code> for
    * the calling object, <code>false</code> otherwise.
    */
-  @SuppressWarnings("WeakerAccess")
-  public boolean isSetup() {
-    return (color == MOVE_SETUP);
-  }
+  boolean isSetup();
 
   /**
    * Tests a move to see if it is a root move.
@@ -272,9 +67,7 @@ public class Move {
    * @return <code>true</code> if <code>color == Move.MOVE_ROOT</code> for
    * the calling object, <code>false</code> otherwise.
    */
-  public boolean isRoot() {
-    return (color == MOVE_ROOT);
-  }
+  boolean isRoot();
 
   /**
    * Tests a move to see if it is a "normal" move.
@@ -283,9 +76,7 @@ public class Move {
    * <code>Move.MOVE_WHITE</code> or <code> Move.MOVE_BLACK</code>
    * for the calling object, <code>false</code> otherwise.
    */
-  public boolean isMove() {
-    return (color == MOVE_WHITE || color == MOVE_BLACK);
-  }
+  boolean isMove();
 
   /**
    * Tests if this move belongs to white.
@@ -293,9 +84,7 @@ public class Move {
    * @return <code>true</code> if <code>color</code> is equal to
    * <code>Move.MOVE_WHITE</code>, <code>false</code> otherwise.
    */
-  public boolean isWhite() {
-    return (color == Move.MOVE_WHITE);
-  }
+  boolean isWhite();
 
   /**
    * Tests if this move belongs to black.
@@ -303,9 +92,7 @@ public class Move {
    * @return <code>true</code> if <code>color</code> is equal to
    * <code>Move.MOVE_WHITE</code>, <code>false</code> otherwise.
    */
-  public boolean isBlack() {
-    return (color == Move.MOVE_BLACK);
-  }
+  boolean isBlack();
 
   /**
    * Test if this move is a pass.
@@ -313,20 +100,13 @@ public class Move {
    * @return <code>true</code> if the move coordinates match
    * <code>Move.PASS</code>
    */
-  public boolean isPass() {
-    //System.out.println("(" + x + " == " + Move.PASS + ") && (" + y + " == " + Move.PASS + ")");
-    return isPass(x,y);
-  }
-
-  public static boolean isPass(int x, int y) {
-    return ((x == Move.PASS) && (y == Move.PASS));
-  }
+  boolean isPass();
 
   /**
    * Returns the number of this instance.
    * <p>
    * In order to keep track of how many moves are being created by
-   * various operations during debugging  and to identify moves uniquely
+   * various operations during debugging, and to identify moves uniquely
    * this method returns a long for every move that has been created.
    * This long is a simple count of how many Move objects have been created
    * since the program was started. If more moves than can be recorded in a
@@ -340,9 +120,7 @@ public class Move {
    *
    * @return A unique long integer for each <code>Move</code> object.
    */
-  public long ID() {
-    return numThis;
-  }
+  long ID();
 
   /**
    * Outputs the contents of all variables in the class for debugging.
@@ -353,36 +131,7 @@ public class Move {
    * output is sent directly to standard output via
    * <code>System.out.println</code>
    */
-
-  public void dPrint() {
-    Iterator empty = addEmpty.iterator();
-    Iterator white = addWhite.iterator();
-    Iterator black = addBlack.iterator();
-    int numchildren = children.size();
-
-    System.out.println("Move instance " + numThis + " of "
-        + numInstances + ":");
-    System.out.println("moveNum=" + moveNum);
-    System.out.println("x=" + x);
-    System.out.println("y=" + y);
-    System.out.println("color=" + color);
-    System.out.println("parent=/n- - - - - - -");
-    parent.dPrint();
-    System.out.println("- - - - - - -");
-    System.out.println("There are " + numchildren + " children");
-    System.out.println("comment=" + comment);
-    System.out.println("Setup vectors:");
-    System.out.print("addEmpty=");
-    while (empty.hasNext())
-      System.out.print(empty.next());
-    System.out.print("\naddWhite=");
-    while (white.hasNext())
-      System.out.print(white.next());
-    System.out.print("\naddBlack=");
-    while (black.hasNext())
-      System.out.print(black.next());
-    System.out.println("\n----------------");
-  }
+  void dPrint();
 
   /**
    * Returns the number of child moves (leaves) are attached at this node.
@@ -391,9 +140,7 @@ public class Move {
    * attached as children (leaves) to this node on the tree of
    * moves.
    */
-  public int numChildren() {
-    return children.size();
-  }
+  int numChildren();
 
   /**
    * Remove the specified child and its associated variations.
@@ -407,13 +154,7 @@ public class Move {
    * @param which A reference to the move to be removed from the
    *              <code>children</code> vector.
    */
-  public void removeChild(Move which) {
-    children.remove(which);
-  }
-
-  //
-  // Add public void removeSelf(Move Which) method here?
-  //
+  void removeChild(Move which);
 
   /**
    * Add the specified child to the <code>children</code> vector.
@@ -424,9 +165,7 @@ public class Move {
    * @param child A reference to the move to be added to the
    *              <code>children</code> vector.
    */
-  public void addChild(Move child) {
-    children.add(child);
-  }
+  void addChild(Move child);
 
   /**
    * Add a {@link PointOfPlay} to be cleared of all stones in a setup node.
@@ -451,38 +190,7 @@ public class Move {
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-  public void setupEmpty(int x, int y) {
-    setup(x, y, addEmpty, addWhite, addBlack);
-  }
-
-  private void setup(int x, int y, List<PointOfPlay> target, List<PointOfPlay> other1, List<PointOfPlay> other2) {
-    PointOfPlay temp = new PointOfPlay(x, y);
-
-    if (this.isMove())             // setup nodes and Moves MUST not be
-      return;                      // mixed!
-
-    // check if point is already in list of empty points
-    for (PointOfPlay point : target) {
-      if (point.equals(temp))
-        return;
-    }
-
-    // now remove any duplicates
-    remDup(temp, other1);
-    remDup(temp, other2);
-
-    target.add(temp);            // if we get here the point is unique
-    // so we can go ahead and add it
-  }
-
-  private void remDup(PointOfPlay temp, List<PointOfPlay> list) {
-    for (PointOfPlay thisOne : list) {
-      if (thisOne.equals(temp)) {
-        addWhite.remove(thisOne);
-        break;
-      }
-    }
-  }
+  void setupEmpty(int x, int y);
 
   /**
    * Add a {@link PointOfPlay} where a white stone should be added to
@@ -508,9 +216,7 @@ public class Move {
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-  public void setupWhite(int x, int y) {
-    setup(x, y, addWhite, addEmpty, addBlack);
-  }
+  void setupWhite(int x, int y);
 
   /**
    * Add a {@link PointOfPlay} where a Black stone should be added to
@@ -536,9 +242,7 @@ public class Move {
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-  public void setupBlack(int x, int y) {
-    setup(x, y, addBlack, addWhite, addEmpty);
-  }
+  void setupBlack(int x, int y);
 
   /**
    * Remove accidentally added empty setup points.
@@ -554,14 +258,7 @@ public class Move {
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-  public void undoSetupEmpty(int x, int y) {
-    PointOfPlay temp = new PointOfPlay(x, y);
-
-    if (this.isMove())             // setup nodes and moves MUST not be
-      return;                    // mixed!
-
-    remDup(temp, addEmpty);
-  }
+  void undoSetupEmpty(int x, int y);
 
   /**
    * Remove accidentally added white stones in a  setup node.
@@ -577,15 +274,7 @@ public class Move {
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-  public void undoSetupWhite(int x, int y) {
-    PointOfPlay temp = new PointOfPlay(x, y);
-
-    if (this.isMove())             // setup nodes and Moves MUST not be
-      return;                    // mixed!
-
-    remDup(temp, addWhite);
-  }
-
+  void undoSetupWhite(int x, int y);
 
   /**
    * Remove accidentally added black stones in a  setup node.
@@ -601,22 +290,7 @@ public class Move {
    * @param x The horizontal displacement from the lower left corner
    * @param y The vertical displacement from the lower left corner
    */
-  public void undoSetupBlack(int x, int y) {
-    PointOfPlay temp = new PointOfPlay(x, y);
-    Iterator points = addBlack.iterator();
-
-    if (this.isMove())             // setup nodes and Moves MUST not be
-      return;                    // mixed!
-
-    while (points.hasNext())        // check if point is already in list
-    {
-      PointOfPlay thisOne = (PointOfPlay) points.next();
-      if (thisOne.equals(temp)) {
-        addBlack.remove(thisOne);
-        return;
-      }
-    }
-  }
+  void undoSetupBlack(int x, int y);
 
   /**
    * Returns the y coordinate as normally represented in english texts.
@@ -629,9 +303,7 @@ public class Move {
    * @return The vertical displacement from the lower left corner
    * as an <code>int</code>
    */
-  public int yEnglish() {
-    return (y + 1);
-  }
+  int yEnglish();
 
   /**
    * Returns the x coordinate as normally represented in english texts.
@@ -650,16 +322,7 @@ public class Move {
    * @return The vertical displacement from the lower left corner
    * as an <code>char</code>
    */
-  public char xEnglish() {
-    if (x >= 9)
-      return (char) ('a' + x + 1); // This is a convention used in books.
-      // The letter i is skipped, probably
-      // because of it's similarity to j
-      // in some type faces. Since fonts may
-      // be customizable it should be kept.
-    else
-      return (char) ('a' + x);
-  }
+  char xEnglish();
 
   /**
    * Returns the x coordinate as represented in the SGF file format.
@@ -674,9 +337,7 @@ public class Move {
    * @return The horizontal displacement from the <b>upper</b> left
    * corner as a <code>char</code>
    */
-  public char xSGF(int xNum) {
-    return (xNum == Move.PASS) ? ' ' : (char) ('a' + xNum);
-  }
+  char xSGF(int xNum);
 
   /**
    * Returns the y coordinate as represented in the SGF file format.
@@ -692,9 +353,7 @@ public class Move {
    * @return The vertical displacement from the <b>upper</b> left
    * corner as a <code>char</code>
    */
-  public char ySGF(int yNum) {
-    return (yNum == Move.PASS) ? ' ' : (char) ('a' + 18 - yNum); // SGF format a,a is upper left corner
-  }
+  char ySGF(int yNum);
 
   /**
    * Returns a string representation of the <code>Move</code> object.
@@ -720,43 +379,7 @@ public class Move {
    *
    * @return A string representing the move in SGF format.
    */
-  public String toString() {
-    StringBuilder temp = new StringBuilder();
-
-    if (this.isMove()) {
-      temp.append(color);
-      temp.append("[").append(xSGF(x)).append(ySGF(y)).append("]");
-    } else {
-      if (addEmpty.size() > 0) {
-        Iterator points = addEmpty.iterator();
-        temp.append("AE");
-        while (points.hasNext()) {
-          PointOfPlay thisOne = (PointOfPlay) points.next();
-          temp.append("[").append(xSGF(thisOne.getX())).append(ySGF(thisOne.getY())).append("]");
-        }
-      }
-      if (addWhite.size() > 0) {
-        Iterator points = addWhite.iterator();
-        temp.append("AW");
-        while (points.hasNext()) {
-          PointOfPlay thisOne = (PointOfPlay) points.next();
-          temp.append("[").append(xSGF(thisOne.getX())).append(ySGF(thisOne.getY())).append("]");
-        }
-      }
-      if (addBlack.size() > 0) {
-        Iterator points = addBlack.iterator();
-        temp.append("AB");
-        while (points.hasNext()) {
-          PointOfPlay thisOne = (PointOfPlay) points.next();
-          temp.append("[").append(xSGF(thisOne.getX())).append(ySGF(thisOne.getY())).append("]");
-        }
-      }
-    }
-    if (!"".equals(comment))
-      temp.append("C[").append(comment).append("]");
-
-    return temp.toString();
-  }
+  String toString();
 
   /**
    * Get a reference to the primary (first added) child.
@@ -769,11 +392,7 @@ public class Move {
    *
    * @return A reference to the next move in the primary variation.
    */
-  public Move next() {
-    if (children.size() == 0)
-      return this;
-    return children.get(0);
-  }
+  Move next();
 
   /**
    * Get a reference to the specified child (variation).
@@ -788,14 +407,7 @@ public class Move {
    * @return A reference to the next move in the move tree for
    * the requested variation.
    */
-  public Move next(int variation) {
-    if (variation >= 0 && variation <= children.size())
-      return children.get(variation);
-    else if (children.size() == 0)
-      return this;
-    else
-      return children.get(0);
-  }
+  Move next(int variation);
 
   /**
    * Get a reference to the parent of this move.
@@ -806,9 +418,7 @@ public class Move {
    *
    * @return A reference to the parent move one level up the move tree.
    */
-  public Move getParent() {
-    return parent;
-  }
+  Move getParent();
 
   /**
    * Sets the color that should move next for root moves or setup moves.
@@ -822,24 +432,15 @@ public class Move {
    *                  turn of play.
    * @throws UnsupportedOperationException When it is invoked on a "normal move"
    */
-  public void setColorMoveNext(char nextColor) {
-    if ((color == MOVE_SETUP) || (color == MOVE_ROOT)) {
-      colorMoveNext = nextColor;
-    } else {
-      String msg = "Can only set colorNextMove in setup/root Moves!";
-      throw new UnsupportedOperationException(msg);
-    }
-  }
+  void setColorMoveNext(char nextColor);
 
   /**
-   * Querys to find out what the next color to be played is.
+   * Queries to find out what the next color to be played is.
    *
    * @return Either </code>Move.MOVE_WHITE</code> or
    * </code>Move.MOVE_BLACK</code>.
    */
-  public char getColorNextMove() {
-    return colorMoveNext;
-  }
+  char getColorNextMove();
 
   /**
    * Queries to find out how many moves have been played in the game so far.
@@ -854,9 +455,7 @@ public class Move {
    *
    * @return The move number for this move.
    */
-  public int getMoveNum() {
-    return moveNum;
-  }
+  int getMoveNum();
 
   /**
    * Add a comment about this move.
@@ -865,9 +464,7 @@ public class Move {
    *
    * @param aComment The comment about the move in string form.
    */
-  public void setComment(String aComment) {
-    comment = aComment;
-  }
+  void setComment(String aComment);
 
   /**
    * Queries to get the comments for this move.
@@ -877,27 +474,21 @@ public class Move {
    *
    * @return A string containing the comments for this move.
    */
-  public String getComment() {
-    return comment;
-  }
+  String getComment();
 
   /**
    * Queries to find out the x coordinate of this move.
    *
    * @return The horizontal displacement from the lower left corner.
    */
-  public int getX() {
-    return x;
-  }
+  int getX();
 
   /**
    * Queries to find out the y coordinate of this move.
    *
    * @return The vertical displacement from the lower left corner.
    */
-  public int getY() {
-    return y;
-  }
+  int getY();
 
   /**
    * Queries to find out the color of the current move.
@@ -910,9 +501,7 @@ public class Move {
    *
    * @return One of <code>MOVE_ROOT|MOVE_SETUP|MOVE_WHITE|MOVE_BLACK</code>
    */
-  public char getColor() {
-    return color;
-  }
+  char getColor();
 
   /**
    * Return an array of vectors containing the setup information for this
@@ -925,15 +514,5 @@ public class Move {
    * @return A copy of (not reference to) the setup information in
    * this instance.
    */
-  public List<PointOfPlay>[] getSetupInfo() {
-    @SuppressWarnings("unchecked")
-    List<PointOfPlay>[] tmp = new List[3];
-
-    tmp[0] = Collections.unmodifiableList(addEmpty);
-    tmp[1] = Collections.unmodifiableList(addBlack);
-    tmp[2] = Collections.unmodifiableList(addWhite);
-
-    return tmp;
-  }
+  List<PointOfPlay>[] getSetupInfo();
 }
-

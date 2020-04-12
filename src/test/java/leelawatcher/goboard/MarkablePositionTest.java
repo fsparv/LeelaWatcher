@@ -1,14 +1,17 @@
 package leelawatcher.goboard;
 
 import leelawatcher.goboard.move.Move;
+import leelawatcher.goboard.move.MoveNode;
+import leelawatcher.goboard.move.RootNode;
 import org.junit.Test;
 
 import java.util.Set;
 
+import static leelawatcher.goboard.move.Move.MOVE_BLACK;
+import static leelawatcher.goboard.move.Move.MOVE_WHITE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static leelawatcher.goboard.move.Move.*;
 
 
 /**
@@ -66,26 +69,26 @@ public class MarkablePositionTest {
     public void testGetGroup1Set() {
 
         Position pos = new Position();
-        Move root = new Move();
-        pos = new Position(pos, new Move(2, 2, MOVE_BLACK, root));
+        Move root = new RootNode();
+        pos = new Position(pos, new MoveNode(2, 2, MOVE_BLACK, root));
         MarkablePosition mp = new MarkablePosition(pos);
 
-        Set members = mp.getGroupSet(new PointOfPlay(2, 2), null, 9);
+        Set<PointOfPlay> members = mp.getGroupSet(new PointOfPlay(2, 2), null, 9);
         assertEquals("Unexpected number of members",1, members.size());
     }
 
     @Test
     public void testGetGroup3Set() {
         Position pos = new Position();
-        Move root = new Move();
-        pos = new Position(pos, new Move(2, 2, MOVE_BLACK, root));
-        pos = new Position(pos, new Move(2, 5, MOVE_WHITE, root));
-        pos = new Position(pos, new Move(2, 3, MOVE_BLACK, root));
-        pos = new Position(pos, new Move(6, 5, MOVE_WHITE, root));
-        pos = new Position(pos, new Move(3, 3, MOVE_BLACK, root));
+        Move root = new RootNode();
+        pos = new Position(pos, new MoveNode(2, 2, MOVE_BLACK, root));
+        pos = new Position(pos, new MoveNode(2, 5, MOVE_WHITE, root));
+        pos = new Position(pos, new MoveNode(2, 3, MOVE_BLACK, root));
+        pos = new Position(pos, new MoveNode(6, 5, MOVE_WHITE, root));
+        pos = new Position(pos, new MoveNode(3, 3, MOVE_BLACK, root));
         MarkablePosition mp = new MarkablePosition(pos);
 
-        Set members = mp.getGroupSet(new PointOfPlay(2, 2), null, 9);
+        Set<PointOfPlay> members = mp.getGroupSet(new PointOfPlay(2, 2), null, 9);
         assertEquals("Unexpected number of members",3, members.size());
     }
 
