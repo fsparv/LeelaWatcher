@@ -15,6 +15,7 @@
  */
 package leelawatcher.goboard;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,9 +58,7 @@ public class MarkablePosition extends Position {
    * All mark up bits are set to 0 completely erasing all marks.
    */
   public void clearMarks() {
-    for (int i = 0; i < marks.length; i++) {
-      marks[i] = 0;
-    }
+    Arrays.fill(marks, 0);
   }
 
   /**
@@ -146,9 +145,9 @@ public class MarkablePosition extends Position {
    * @param boardSize The size of the board
    * @return A HashSet of PointOfPlay objects describing the group
    */
-  public Set getGroupSet(PointOfPlay p, Set<PointOfPlay> members, int boardSize) {
+  public Set<PointOfPlay> getGroupSet(PointOfPlay p, Set<PointOfPlay> members, int boardSize) {
     if (members == null) {
-      members = new HashSet<>();
+      members = new HashSet<PointOfPlay>();
       clearMarks();                // NOTE that this clears all marks
     }
 

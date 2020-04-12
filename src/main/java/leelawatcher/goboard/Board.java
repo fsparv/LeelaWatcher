@@ -118,7 +118,7 @@ public class Board {
    * variation.
    */
 
-  public Iterator getPosIter() {
+  public Iterator<Position> getPosIter() {
     return positions.iterator();
   }
 
@@ -140,7 +140,7 @@ public class Board {
     String temp = gm.getBoardSize();
     if (temp.indexOf(':') < 0)
       try {
-        numlines = new Integer(temp);
+        numlines = Integer.parseInt(temp);
       } catch (NumberFormatException e) {
         System.out.println("number format exception reading board size: " + temp + "\n" + e);
         System.exit(0);
@@ -380,7 +380,7 @@ public class Board {
    */
   @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
   public int captureGroup(PointOfPlay p) {
-    Set groupList = enumerateGroup(p);
+    Set<PointOfPlay> groupList = enumerateGroup(p);
     int result = groupList.size();
 
     for (Object aGroupList : groupList) {
@@ -388,7 +388,6 @@ public class Board {
     }
 
     return result;
-
   }
 
   /**
@@ -404,7 +403,7 @@ public class Board {
    * @see MarkablePosition#getGroupSet
    */
 
-  private Set enumerateGroup(PointOfPlay p) {
+  private Set<PointOfPlay> enumerateGroup(PointOfPlay p) {
     return getGroupSet(p);
   }
 
@@ -418,7 +417,7 @@ public class Board {
    * @see MarkablePosition#getGroupSet(PointOfPlay, Set, int)
    */
 
-  private Set getGroupSet(PointOfPlay p) {
+  private Set<PointOfPlay> getGroupSet(PointOfPlay p) {
     MarkablePosition temp = new MarkablePosition(getCurrPos());
     return temp.getGroupSet(p, null, getBoardSize());
   }

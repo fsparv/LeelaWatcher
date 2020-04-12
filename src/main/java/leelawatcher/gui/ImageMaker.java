@@ -95,18 +95,6 @@ public class ImageMaker implements TsbConstants {
 
   // paint a stone at a given coordinate specified in pixels
 
-  //  public void paintStone2D(int x, int y, Color player,
-  //                         int pixSize, Graphics2D G)
-  //      {
-  //          Ellipse2D.Float stone = new Ellipse2D.Float(x,y,pixSize,pixSize);
-  //          G.setColor(player);
-  //          G.fill(stone);
-  //          G.setColor(Color.black);
-  //          G.draw(stone);
-  //      }
-
-  // paint a stone at a given coordinate specified in pixels
-
   public void paintStone(int x, int y, Color player,
                          int pixSize, Graphics g) {
     //System.out.println("by pixel"+x+","+y);

@@ -104,8 +104,8 @@ public class Game {
    *
    * @param nameWhite The name of the player using white stones.
    * @param nameBlack The name of the player using black stones.
-   * @param handicap  The handicap for the game
-   * @param ptsKomi
+   * @param handicap The handicap for the game
+   * @param ptsKomi Amount of komi to use
    */
   public Game(String nameWhite, String nameBlack, int handicap,
               float ptsKomi) {
@@ -563,14 +563,6 @@ public class Game {
     _boardSizeY = square;
   }
 
-  // This method not yet supported.
-  //
-  //    public void setBoardSize(int x, int y)
-  //    {
-  //	     _boardSizeX = x;
-  //	     _boardSizeY = y;
-  //    }
-
   /**
    * A string representation of the size of the board.
    *
@@ -899,20 +891,4 @@ public class Game {
     dPrintMoves(_gameRoot);
   }
 
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

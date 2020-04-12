@@ -36,28 +36,26 @@ import java.util.List;
  * the SGF file format.
  * <p>
  * <p><b><i>This class is due for a refactoring</i></b>, it does too much. It
- * should be devided into a MoveNode, a SetupNode and a RootNode which inherit
+ * should be divided into a MoveNode, a SetupNode and a RootNode which inherit
  * from an AbstractNode. This will also bring the object model in closer
- * corespondence with the structure of an SGF file.
+ * correspondence with the structure of an SGF file.
  * <p>
  * <p>There will also be a need to write a GameInfo class and provide a place
- * to attach it to the first distinguishing move in a tree of games begining
+ * to attach it to the first distinguishing move in a tree of games beginning
  * with the move sequence. This will not be necessary until either loading of
  * ANY SGF file is supported, or creation of multi-game trees is supported.
  * <p>
  * <p> It is important to note that while some methods here will work for
  * board sizes over or under 19x19 <b>only 19x19 is fully supported</b> by all
  * the methods in this class at this time. Some Functionality may need to be
- * swaped out to other classes (particularly in the realm of generating
+ * swapped out to other classes (particularly in the realm of generating
  * SGF output) to support other board sizes.
  *
  * @author Patrick G. Heck
  * @version 0.1
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class Move
-
-{
+public class Move {
   /**
    * <code>MOVE_WHITE</code> is the character that should be used to
    * designate a white move throughout the application.
@@ -241,7 +239,7 @@ public class Move
     moveNum = parentMove.getMoveNum();    // find out who is before us
     moveNum++;                            // we are one more move into tree
 
-    parent = parentMove;                  // Supprised?
+    parent = parentMove;                  // Suprised?
 
     parentMove.addChild(this);            // inform Parent of new child
 
