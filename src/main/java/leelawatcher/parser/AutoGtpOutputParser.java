@@ -36,7 +36,7 @@ public class AutoGtpOutputParser {
    * This pattern is meant to report a match for one of 3 groups:
    * 1. Anything ending in 'set.' or 'sent.'
    *    'set. was used prior to v18, but somewhere around v18 the initial text ended with 'sent.'
-   * 2. A game move
+   * 2. A game move.
    * 3. "Game"
    */
   private static final Pattern EVENT =
