@@ -16,7 +16,13 @@
 
 package leelawatcher.scorer;
 
-import leelawatcher.goboard.*;
+import leelawatcher.goboard.Board;
+import leelawatcher.goboard.MarkablePosition;
+import leelawatcher.goboard.PointOfPlay;
+import leelawatcher.goboard.Position;
+import leelawatcher.goboard.move.Move;
+import leelawatcher.goboard.move.MoveNode;
+import leelawatcher.goboard.move.RootNode;
 
 import java.util.Iterator;
 
@@ -34,9 +40,9 @@ public class QuickRules extends AbstractRules {
     // we must build a MarkablePosition that shows the board as it would be
     // if the stone were placed in order to test if this would result in self
     // capture (illegal in most rules of the game)
-    Move tmpRoot = new Move();
+    Move tmpRoot = new RootNode();
     char color = board.isWhiteMove() ? Move.MOVE_WHITE : Move.MOVE_BLACK;
-    Move testMove = new Move(p.getX(), p.getY(), color, tmpRoot);
+    Move testMove = new MoveNode(p.getX(), p.getY(), color, tmpRoot);
     Position tmpPos = new Position(board.getCurrPos(), testMove);
     MarkablePosition testMPos = new MarkablePosition(tmpPos);
     //testMPos.dPrint();
@@ -81,7 +87,7 @@ public class QuickRules extends AbstractRules {
   }
 
   public boolean isKo(PointOfPlay p, Board board) {
-    Move tmproot = new Move();
+    Move tmproot = new RootNode();
     int stonesRemoved = 0;
     char color = Move.MOVE_BLACK;
 
@@ -97,7 +103,7 @@ public class QuickRules extends AbstractRules {
     if (board.isWhiteMove()) {
       color = Move.MOVE_WHITE;
     }
-    testMove = new Move(p.getX(), p.getY(), color, tmproot);
+    testMove = new MoveNode(p.getX(), p.getY(), color, tmproot);
     tmpPos = new Position(board.getCurrPos(), testMove);
     testMPos = new MarkablePosition(tmpPos);
 
@@ -145,7 +151,7 @@ public class QuickRules extends AbstractRules {
 
     //System.out.println(stonesRemoved);
     if (stonesRemoved == 1) {
-      for (Iterator i = board.getPosIter(); i.hasNext(); ) {
+      for (Iterator<Position> i = board.getPosIter(); i.hasNext(); ) {
         if (i.next().equals(testMPos)) {
           return true;
         }

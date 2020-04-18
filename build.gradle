@@ -6,22 +6,20 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
     }
 }
 
-plugins {
-    id "com.github.johnrengelman.shadow" version "2.0.1"
-    id "java"
-    id "application"
-}
-
+apply plugin: 'java'
+apply plugin: 'application'
 mainClassName = 'leelawatcher.gui.LeelaWatcher'
+apply plugin: 'com.github.johnrengelman.shadow'
+
 
 shadowJar {
     baseName = 'LeelaWatcher'
     classifier = null
-    version = '1.1.0'
+    version = '1.2.0'
 }
 
 repositories {
@@ -29,7 +27,11 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:23.5-jre'
-    compile 'com.offbytwo:docopt:0.6.0.20150202'
-    testCompile('junit:junit:4.12')
+    implementation 'com.google.guava:guava:23.5-jre'
+    implementation 'com.offbytwo:docopt:0.6.0.20150202'
+    testImplementation('junit:junit:4.12')
+}
+
+wrapper {
+    gradleVersion = '6.2'
 }

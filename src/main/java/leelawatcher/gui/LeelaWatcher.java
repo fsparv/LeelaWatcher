@@ -110,12 +110,15 @@ public class LeelaWatcher {
                 JScrollBar vertical = leelaWatcher.textScrollPane.getVerticalScrollBar();
                 vertical.setValue(vertical.getMaximum());
               }
-              if ("inProgress".equals(evt.getPropertyName())) {
+              else if ("inProgress".equals(evt.getPropertyName())) {
                 if (Objects.equals(evt.getNewValue(), false)) {
                   if (!dontSaveGames) {
                     leelaWatcher.boardView.saveGame();
                   }
                 }
+              }
+              else {
+                System.out.println("Unexpected propertyName: " + evt.getPropertyName());
               }
             });
           leelaWatcher.parser.start(new BufferedInputStream(proc.getInputStream()));

@@ -15,6 +15,8 @@
  */
 package leelawatcher.goboard;
 
+import leelawatcher.goboard.move.Move;
+
 /**
  * The location of a point on a go board.
  * <p>
