@@ -16,6 +16,8 @@
 
 package leelawatcher.goboard;
 
+import leelawatcher.goboard.move.Move;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;

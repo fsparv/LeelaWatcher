@@ -18,7 +18,7 @@ package leelawatcher.sgf;
 
 import leelawatcher.TsbConstants;
 import leelawatcher.goboard.Game;
-import leelawatcher.goboard.Move;
+import leelawatcher.goboard.move.Move;
 
 // This class is meant to simply provide a routine for converting a game object
 // to a string that conforms to SGF FF[4]. game.java extends this class
